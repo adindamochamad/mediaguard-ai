@@ -5,6 +5,11 @@ import { fileURLToPath } from 'node:url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 export const akarRepo = path.join(__dirname, '..', '..');
 
+/** Path yang tidak boleh pernah di-push (strategi internal). */
+export const prefixTidakBolehPush = ['docs/', 'prompts/', 'agents/'];
+
+export const namaFileTidakBolehPush = ['AGENTS.md'];
+
 /** Nama file yang tidak boleh masuk indeks Git. */
 export const namaFileTerlarang = [
   '.env',
@@ -65,7 +70,13 @@ export const polaBarisPesanDihapus = [
 /**
  * @param {string} namaRelatif
  */
+export function apakahPathStrategiInternal(namaRelatif) {
+  if (namaFileTidakBolehPush.includes(namaRelatif)) return true;
+  return prefixTidakBolehPush.some((p) => namaRelatif.startsWith(p));
+}
+
 export function apakahNamaFileTerlarang(namaRelatif) {
+  if (apakahPathStrategiInternal(namaRelatif)) return true;
   const dasar = path.basename(namaRelatif);
   if (namaFileTerlarang.includes(dasar)) return true;
   if (/^\.env(\.|$)/.test(dasar) && dasar !== '.env.example') return true;
@@ -165,6 +176,12 @@ export async function periksaBerkasStage(daftarBerkasRelatif) {
   const galat = [];
 
   for (const rel of daftarBerkasRelatif) {
+    if (apakahPathStrategiInternal(rel)) {
+      galat.push(
+        `File strategi/internal di-stage: ${rel} — docs/, prompts/, agents/, AGENTS.md tidak boleh di-push`,
+      );
+      continue;
+    }
     if (apakahNamaFileTerlarang(rel)) {
       galat.push(`File terlarang di-stage: ${rel} (env/rahasia tidak boleh di-push)`);
       continue;

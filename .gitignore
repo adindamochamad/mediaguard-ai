@@ -17,12 +17,14 @@ credentials*.json
 secrets.json
 .npmrc
 
+# Strategi, pitch, arsitektur internal — HANYA lokal (jangan di-push)
+/docs/
+AGENTS.md
+/prompts/
+/agents/
+
 # Log & cache lokal
 *.log
 .DS_Store
 .turbo/
 coverage/
-
-# Laporan agen yang bisa berisi data sensitif (opsional commit template saja)
-agents/laporan/*.md
-!agents/laporan/.gitkeep
