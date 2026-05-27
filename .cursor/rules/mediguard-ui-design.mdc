@@ -1,0 +1,66 @@
+---
+description: MediGuard AI — locked UI design system (English UI, modern minimal professional)
+globs:
+  - app/**/*
+  - components/**/*
+  - public/**/*
+---
+
+# MediGuard UI — Design Lock
+
+When generating or editing UI, **follow this system** unless the user explicitly requests a redesign.
+
+## Brand & tone
+
+- Product name: **MediGuard AI** (wordmark: MediGuard + AI accent).
+- Voice: professional health-tech, calm, trustworthy — **all user-facing copy in English**.
+- Not clinical alarmist; include disclaimer that product is not medical advice where relevant.
+
+## Color tokens (match `app/globals.css`)
+
+| Token | Hex | Usage |
+|-------|-----|--------|
+| background | `#f8fafc` | Page bg |
+| foreground | `#0f172a` | Headings, primary text |
+| muted | `#64748b` | Secondary text |
+| accent | `#0d9488` | CTAs, links, logo mark |
+| accent-soft | `#ccfbf1` | Soft highlights, icon bg |
+| card | `#ffffff` | Cards, header |
+| border | `#e2e8f0` | Dividers |
+
+## Typography
+
+- Sans: **Inter** (`--font-sans`) — UI, marketing.
+- Mono: **JetBrains Mono** (`--font-mono`) — code, API paths, JSON.
+
+## Logo & brand assets
+
+- Use `BrandLogo` from `components/brand-logo.tsx` and paths in `lib/jalur-brand.ts`.
+- Raster files live in `public/brand/` (source exports may sit in `asset/` at repo root).
+- Do not swap to shields, pills, crosses, or gradients on the mark.
+
+## Layout patterns
+
+- Max content width: `max-w-6xl`, horizontal padding `px-6`.
+- Header: sticky, `border-b`, `bg-card/80 backdrop-blur-md`.
+- Cards: `rounded-2xl border border-border bg-card shadow-soft`.
+- Primary button: `rounded-xl bg-accent` white text; secondary: `border border-border bg-card`.
+- Sections: generous vertical rhythm (`py-20`), subtle radial hero gradient using `accent-soft`.
+
+## Components (reuse, extend — do not duplicate styles)
+
+- `components/layout-header.tsx`
+- `components/section-hero.tsx`
+- `components/section-features.tsx`
+- `components/panel-database-status.tsx`
+- `components/layout-footer.tsx`
+
+## Imagery
+
+- Prefer flat/minimal illustrations; teal + slate palette only.
+- Raster brand files: see `design/CHATGPT-ASSET-PROMPTS.md` and `design/brand/README.md`.
+
+## Forbidden UI drift
+
+- Dark hacker aesthetic, neon purple, busy glassmorphism, or new logo shapes.
+- Indonesian in UI strings (code comments for new vars may stay Indonesian per repo rules).

@@ -119,19 +119,23 @@ flowchart LR
 
 ---
 
-## Quick start
+## Day 1 (setup)
+
+See [`supabase/README.md`](supabase/README.md): jalankan migrasi SQL → `npm install` → `npm run dev` → buka `http://localhost:3001/api/health/db` (port **3001** — hindari bentrok dengan app lain di 3000).
+
+**Hosting:** Vercel *opsional* — Anda bisa pakai **VPS sendiri**. Panduan lengkap step-by-step: [`DEPLOY.md`](DEPLOY.md).
 
 ```bash
 git clone https://github.com/adindamochamad/mediaguard-ai.git
 cd mediaguard-ai
 npm install
-
 cp .env.example .env.local
-# ANTHROPIC_API_KEY, NIMBLE_USERNAME, NIMBLE_PASSWORD,
-# NEXT_PUBLIC_SUPABASE_*, SUPABASE_SERVICE_ROLE_KEY, RESEND_API_KEY
+# isi Supabase + kunci API sesuai kebutuhan
 
 npm run dev
 ```
+
+---
 
 ```bash
 npm run setup:git-hooks   # blocks .env & internal strategy files from commits

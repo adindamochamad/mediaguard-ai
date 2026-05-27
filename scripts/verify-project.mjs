@@ -12,13 +12,20 @@ const akarProyek = path.join(__dirname, '..');
 /** File yang wajib ada di repo publik GitHub. */
 const daftarWajibPublik = [
   'README.md',
+  'REPO-PUBLIK.md',
   '.env.example',
-  '.gitignore',
   '.cursor/rules/mediguard-project.mdc',
   '.cursor/rules/mediguard-prompt-ai.mdc',
+  '.cursor/rules/mediguard-api.mdc',
   'scripts/setup-git-hooks.mjs',
   'scripts/run-agents.mjs',
   'package.json',
+  'next.config.mjs',
+  'app/layout.tsx',
+  'vercel.json',
+  'supabase/migrations/001_schema_rls.sql',
+  'supabase/README.md',
+  'DEPLOY.md',
 ];
 
 /** File strategi — wajib di mesin lokal, tidak di remote. */
