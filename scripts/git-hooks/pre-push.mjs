@@ -23,7 +23,7 @@ function periksaFileTerlacak() {
     const penuh = path.join(akarRepo, rel);
     try {
       const isi = fs.readFileSync(penuh, 'utf8');
-      const pola = temukanRahasiaDalamIsi(isi);
+      const pola = temukanRahasiaDalamIsi(isi, rel);
       if (pola) galat.push(`Rahasia terdeteksi di ${rel}`);
     } catch {
       /* binary / skip */

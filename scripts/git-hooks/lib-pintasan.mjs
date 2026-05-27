@@ -14,14 +14,37 @@ export const namaFileTerlarang = [
   '.env.test',
 ];
 
-/** Pola isi berbahaya pada file yang di-stage. */
+/** Folder/file yang boleh berisi contoh env tanpa dianggap rahasia nyata. */
+export const prefixAmanContoh = ['docs/', 'prompts/', 'agents/templates/', '.env.example'];
+
+/** Pola isi berbahaya (nilai env dicek per baris, bukan placeholder docs). */
 export const polaRahasiaIsi = [
   /\bsk-ant-[a-zA-Z0-9_-]{20,}\b/,
   /\bsk_live_[a-zA-Z0-9]{20,}\b/,
-  /\bNIMBLE_PASSWORD\s*=\s*[^\s#]+/i,
-  /\bSUPABASE_SERVICE_ROLE_KEY\s*=\s*eyJ[a-zA-Z0-9._-]{20,}/,
   /BEGIN (RSA |EC)?PRIVATE KEY/,
 ];
+
+const polaBarisEnv = [
+  /^NIMBLE_PASSWORD\s*=\s*(.+)$/im,
+  /^NIMBLE_USERNAME\s*=\s*(.+)$/im,
+  /^ANTHROPIC_API_KEY\s*=\s*(.+)$/im,
+  /^SUPABASE_SERVICE_ROLE_KEY\s*=\s*(.+)$/im,
+  /^RESEND_API_KEY\s*=\s*(.+)$/im,
+];
+
+/** Nilai contoh dokumentasi — bukan rahasia produksi. */
+const nilaiPlaceholder = new Set([
+  '',
+  '...',
+  'your_password',
+  'your_username',
+  'sk-ant-...',
+  're_...',
+  'eyJ...',
+  'changeme',
+  'xxx',
+  'placeholder',
+]);
 
 /** Baris pesan commit yang dihapus otomatis (Co-Author, catatan agen, dll.). */
 export const polaBarisPesanDihapus = [
@@ -52,12 +75,55 @@ export function apakahNamaFileTerlarang(namaRelatif) {
 }
 
 /**
- * @param {string} isi
+ * @param {string} nilai
  */
-export function temukanRahasiaDalamIsi(isi) {
+export function apakahNilaiEnvPlaceholder(nilai) {
+  const bersih = nilai.trim().replace(/^['"]|['"]$/g, '');
+  if (!bersih) return true;
+  if (nilaiPlaceholder.has(bersih)) return true;
+  if (/^your_/i.test(bersih)) return true;
+  if (/^<[^>]+>$/.test(bersih)) return true;
+  if (/^\.\.\.$/.test(bersih)) return true;
+  return false;
+}
+
+/**
+ * @param {string} relPath
+ */
+export function apakahPathContohDokumentasi(relPath) {
+  if (relPath === '.env.example') return true;
+  return prefixAmanContoh.some((p) => relPath.startsWith(p));
+}
+
+/**
+ * @param {string} isi
+ * @param {string} [relPath]
+ */
+export function temukanRahasiaDalamIsi(isi, relPath = '') {
+  if (apakahPathContohDokumentasi(relPath)) {
+    return null;
+  }
+
   for (const pola of polaRahasiaIsi) {
     if (pola.test(isi)) return pola;
   }
+
+  for (const polaBaris of polaBarisEnv) {
+    for (const baris of isi.split('\n')) {
+      const cocok = baris.match(polaBaris);
+      if (!cocok) continue;
+      const nilai = cocok[1].trim();
+      if (!apakahNilaiEnvPlaceholder(nilai)) {
+        return polaBaris;
+      }
+    }
+  }
+
+  const serviceRole = isi.match(/SUPABASE_SERVICE_ROLE_KEY\s*=\s*(eyJ[a-zA-Z0-9._-]{30,})/);
+  if (serviceRole && !apakahNilaiEnvPlaceholder(serviceRole[1])) {
+    return /SUPABASE_SERVICE_ROLE_KEY/;
+  }
+
   return null;
 }
 
@@ -110,7 +176,7 @@ export async function periksaBerkasStage(daftarBerkasRelatif) {
     } catch {
       continue;
     }
-    const pola = temukanRahasiaDalamIsi(isi);
+    const pola = temukanRahasiaDalamIsi(isi, rel);
     if (pola) {
       galat.push(`Kemungkinan rahasia di ${rel} (pola: ${pola})`);
     }
