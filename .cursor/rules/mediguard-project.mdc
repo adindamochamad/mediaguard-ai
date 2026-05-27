@@ -1,0 +1,31 @@
+---
+description: Aturan inti MediGuard AI — produk serius, aman secara informasi medis, dan selaras dokumentasi hackathon.
+alwaysApply: true
+---
+
+# MediGuard AI — Aturan Proyek
+
+## Tujuan
+
+- MediGuard bertujuan **mengurangi risiko kesalahan pengobatan** dengan intel terkurasi dari sumber terbuka, **tanpa menggantikan** tenaga medis profesional.
+- Kebijakan hakiki: hindari narasi penyakit/diagnosis; arahkan pengguna kepada dokter atau apoteker untuk keputusan klinis.
+
+## Prioritas Rekayasa
+
+- **Jejak sumber**: setiap rangkuman bermakna dalam produk akhir mengaitkan tautan/canonical URL ke dokumen primer (FDA, DailyMed, PubMed).
+- **Sinyal-kebisingan**: lebih baik tidak mengeluarkan alarm daripada salah alarm; gunakan scoring keyakinan konsisten dalam pipeline.
+- **Rahasia & PHI**: hindari penyimpanan data kesehatan yang tidak perlu; kunci API hanya server-side (lihat pola di `docs/03-ARCHITECTURE.md`).
+
+## Cakupan & Larangan Lingkup
+
+- Patuhi batas MVP di `docs/04-FEATURES.md`; fitur baru hanya ditambahkan bila mempengaruhi demo kritis atau keamanan.
+- Jangan menyalin teks hak cipta penuh dari FDA/PubMed ke basis data produksi — simpan tautan dan kutipan singkat sah.
+
+## Dokumentasi adalah Kontrak Tim
+
+- Perubahan arsitektur yang material **wajib** disinkronkan ke `docs/03-ARCHITECTURE.md` dan alur Nimble-Claude (`docs/07-API_INTEGRATIONS.md`).
+- Istilah luar (README publik dalam Inggris) boleh; untuk **nama variabel/komentar baru dalam kode** ikuti bahasa Indonesia seperti aturan pemilik repositori.
+
+## Setelah Mengubah Kode atau Konfigurasi
+
+- Jalankan `npm run agents` (verifikasi + rangka tes). Analisis hasil gagal dan perbaiki sebelum melanjutkan.

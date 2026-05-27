@@ -1,0 +1,14 @@
+---
+description: Konvensi route handler MediGuard (API, cron, rahasia server-side).
+globs: app/api/**/*
+alwaysApply: false
+---
+
+# MediGuard — API Routes
+
+- Validasi sesi Supabase pada rute yang menyentuh data pengguna; gunakan service role hanya di cron/pipeline server.
+- `/api/webhooks/cron` wajib memeriksa `Authorization: Bearer ${CRON_SECRET}`.
+- Kunci Nimble, Anthropic, Resend, dan `SUPABASE_SERVICE_ROLE_KEY` hanya di server — tidak di `NEXT_PUBLIC_*`.
+- Respons error jangan bocorkan stack trace ke klien pada produksi demo.
+- Pipeline scan: deduplikasi `source_url`; filter `confidence` ≥ nilai dari `prompts/konstanta-kebijakan.json`.
+- Setelah mengubah rute, jalankan `npm run agents`.

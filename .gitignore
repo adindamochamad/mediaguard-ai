@@ -1,0 +1,28 @@
+# Dependensi & build
+node_modules/
+.next/
+out/
+dist/
+build/
+.vercel/
+
+# Lingkungan & rahasia (jangan pernah di-push)
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+credentials.json
+credentials*.json
+secrets.json
+.npmrc
+
+# Log & cache lokal
+*.log
+.DS_Store
+.turbo/
+coverage/
+
+# Laporan agen yang bisa berisi data sensitif (opsional commit template saja)
+agents/laporan/*.md
+!agents/laporan/.gitkeep

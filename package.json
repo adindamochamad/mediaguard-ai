@@ -1,0 +1,14 @@
+{
+  "name": "mediaguard-ai",
+  "version": "0.1.0",
+  "private": true,
+  "description": "MediGuard AI — platform keselamatan obat dengan AI dan intel web (DeveloperWeek NYC 2026)",
+  "type": "module",
+  "scripts": {
+    "verify": "node scripts/verify-project.mjs && node scripts/verify-teks-medis.mjs",
+    "test": "node scripts/run-tests.mjs",
+    "agents": "node scripts/run-agents.mjs",
+    "setup:git-hooks": "node scripts/setup-git-hooks.mjs",
+    "dev": "echo \"Pasang deps dan jalankan aplikasi sesuai fase build; lihat README.\""
+  }
+}
