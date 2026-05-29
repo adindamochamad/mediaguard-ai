@@ -22,6 +22,10 @@ secrets.json
 AGENTS.md
 /prompts/
 /agents/
+.cursor/
+
+# Build artifacts
+tsconfig.tsbuildinfo
 
 # Log & cache lokal
 *.log

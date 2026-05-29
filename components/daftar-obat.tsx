@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
+import { toast } from 'sonner';
 import { FormObat } from '@/components/form-obat';
 import { KartuObat } from '@/components/kartu-obat';
 import { ModalKonfirmasi } from '@/components/modal-konfirmasi';
@@ -15,26 +16,24 @@ export function DaftarObat() {
   const [mode_form, set_mode_form] = useState<ModeForm>('tutup');
   const [obat_diedit, set_obat_diedit] = useState<Obat | null>(null);
   const [pesan_galat, set_pesan_galat] = useState('');
-  const [pesan_sukses, set_pesan_sukses] = useState('');
   const [obat_menunggu_hapus, set_obat_menunggu_hapus] = useState<Obat | null>(null);
 
   const muat_obat = useCallback(async () => {
     set_sedang_memuat(true);
-    set_pesan_galat('');
 
     try {
       const respons = await fetch('/api/medications');
       const data = await respons.json();
 
       if (!respons.ok) {
-        set_pesan_galat(data.kesalahan ?? 'Could not load medications.');
+        toast.error(data.kesalahan ?? 'Could not load medications.');
         set_daftar_obat([]);
         return;
       }
 
       set_daftar_obat(data.obat ?? []);
     } catch {
-      set_pesan_galat('Network error while loading medications.');
+      toast.error('Network error while loading medications.');
       set_daftar_obat([]);
     } finally {
       set_sedang_memuat(false);
@@ -48,15 +47,11 @@ export function DaftarObat() {
   function buka_form_tambah() {
     set_obat_diedit(null);
     set_mode_form('tambah');
-    set_pesan_galat('');
-    set_pesan_sukses('');
   }
 
   function buka_form_ubah(obat: Obat) {
     set_obat_diedit(obat);
     set_mode_form('ubah');
-    set_pesan_galat('');
-    set_pesan_sukses('');
   }
 
   function tutup_form() {
@@ -95,7 +90,7 @@ export function DaftarObat() {
 
       set_daftar_obat((sebelumnya) => [data.obat, ...sebelumnya]);
       set_mode_form('tutup');
-      set_pesan_sukses(`${data.obat.brand_name} added to your list.`);
+        toast.success(`${data.obat.brand_name} added to your list.`);
     } catch {
       set_pesan_galat('Network error while saving.');
     } finally {
@@ -138,7 +133,7 @@ export function DaftarObat() {
       );
       set_mode_form('tutup');
       set_obat_diedit(null);
-      set_pesan_sukses('Medication updated.');
+      toast.success('Medication updated.');
     } catch {
       set_pesan_galat('Network error while saving.');
     } finally {
@@ -150,8 +145,6 @@ export function DaftarObat() {
     const obat = daftar_obat.find((item) => item.id === id);
     if (!obat) return;
     set_obat_menunggu_hapus(obat);
-    set_pesan_galat('');
-    set_pesan_sukses('');
   }
 
   function tutup_modal_hapus() {
@@ -164,15 +157,13 @@ export function DaftarObat() {
 
     const id = obat_menunggu_hapus.id;
     set_sedang_menyimpan(true);
-    set_pesan_galat('');
-    set_pesan_sukses('');
 
     try {
       const respons = await fetch(`/api/medications/${id}`, { method: 'DELETE' });
 
       if (!respons.ok) {
         const data = await respons.json();
-        set_pesan_galat(data.kesalahan ?? 'Could not remove medication.');
+        toast.error(data.kesalahan ?? 'Could not remove medication.');
         set_obat_menunggu_hapus(null);
         return;
       }
@@ -182,9 +173,9 @@ export function DaftarObat() {
         tutup_form();
       }
       set_obat_menunggu_hapus(null);
-      set_pesan_sukses('Medication removed.');
+      toast.success('Medication removed.');
     } catch {
-      set_pesan_galat('Network error while removing.');
+      toast.error('Network error while removing.');
       set_obat_menunggu_hapus(null);
     } finally {
       set_sedang_menyimpan(false);
@@ -212,21 +203,6 @@ export function DaftarObat() {
           </button>
         ) : null}
       </div>
-
-      {pesan_sukses && mode_form === 'tutup' ? (
-        <p className="rounded-xl border border-accent/30 bg-accent-soft/40 px-4 py-3 text-sm text-foreground">
-          {pesan_sukses}
-        </p>
-      ) : null}
-
-      {pesan_galat && mode_form === 'tutup' ? (
-        <p
-          role="alert"
-          className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800"
-        >
-          {pesan_galat}
-        </p>
-      ) : null}
 
       {mode_form === 'tambah' ? (
         <FormObat

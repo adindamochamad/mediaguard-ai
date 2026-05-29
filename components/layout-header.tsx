@@ -12,11 +12,8 @@ export function LayoutHeader() {
           <a href="#features" className="transition-colors hover:text-foreground">
             Features
           </a>
-          <a href="#roadmap" className="transition-colors hover:text-foreground">
-            Roadmap
-          </a>
-          <a href="#status" className="transition-colors hover:text-foreground">
-            System status
+          <a href="#preview" className="transition-colors hover:text-foreground">
+            See it in action
           </a>
         </nav>
         <div className="flex items-center gap-3">

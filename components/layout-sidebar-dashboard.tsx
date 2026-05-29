@@ -9,6 +9,7 @@ import { daftar_nav_dashboard } from '@/lib/jalur-navigasi';
 
 type PropsSidebarDashboard = {
   email_pengguna: string;
+  jumlah_belum_dibaca?: number;
   children: React.ReactNode;
 };
 
@@ -19,12 +20,12 @@ function nav_aktif(jalur_saat_ini: string, jalur_item: string) {
   return jalur_saat_ini.startsWith(jalur_item);
 }
 
-export function LayoutSidebarDashboard({ email_pengguna, children }: PropsSidebarDashboard) {
+export function LayoutSidebarDashboard({ email_pengguna, jumlah_belum_dibaca = 0, children }: PropsSidebarDashboard) {
   const pathname = usePathname();
 
   return (
     <div className="flex min-h-screen">
-      <aside className="hidden w-64 shrink-0 flex-col border-r border-border bg-card md:flex">
+      <aside className="hidden w-64 shrink-0 flex-col border-r border-border bg-card md:flex md:sticky md:top-0 md:h-screen md:overflow-y-auto">
         <div className="flex h-16 items-center gap-2.5 border-b border-border px-5">
           <BrandLogo ukuran={32} />
           <span className="text-base font-semibold tracking-tight text-foreground">MediGuard</span>
@@ -45,7 +46,12 @@ export function LayoutSidebarDashboard({ email_pengguna, children }: PropsSideba
                 aria-current={aktif ? 'page' : undefined}
               >
                 <IkonNav jenis={item.ikon} />
-                {item.nama}
+                <span className="flex-1">{item.nama}</span>
+                {item.jalur === '/dashboard' && jumlah_belum_dibaca > 0 ? (
+                  <span className="rounded-full bg-red-500 px-1.5 py-0.5 text-[10px] font-bold leading-none text-white">
+                    {jumlah_belum_dibaca > 99 ? '99+' : jumlah_belum_dibaca}
+                  </span>
+                ) : null}
               </Link>
             );
           })}
@@ -91,7 +97,14 @@ export function LayoutSidebarDashboard({ email_pengguna, children }: PropsSideba
           })}
         </nav>
 
-        <main className="flex-1 px-4 py-6 sm:px-6 lg:px-8">{children}</main>
+        <div className="border-b border-amber-200 bg-amber-50 px-4 py-2 text-center text-xs text-amber-700">
+          For informational purposes only — not medical advice. Always consult your healthcare provider or pharmacist.
+        </div>
+
+        <main className="relative flex-1 px-4 py-6 sm:px-6 lg:px-8">
+          <div className="pointer-events-none absolute inset-0 bg-dot-grid opacity-[0.035]" />
+          <div className="relative">{children}</div>
+        </main>
       </div>
     </div>
   );

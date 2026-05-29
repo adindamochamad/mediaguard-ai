@@ -20,7 +20,13 @@ if (hasil_validasi.status !== 0) {
   process.exit(hasil_validasi.status ?? 1);
 }
 
-console.log('[run-tests] Parser Nimble + validasi alert lulus.');
+const skrip_dedup = path.join(__dirname, 'test-deduplikasi-alert.mjs');
+const hasil_dedup = spawnSync(process.execPath, [skrip_dedup], { stdio: 'inherit' });
+if (hasil_dedup.status !== 0) {
+  process.exit(hasil_dedup.status ?? 1);
+}
+
+console.log('[run-tests] Parser Nimble + validasi alert + deduplikasi lulus.');
 console.log(
   '[run-tests] Gunakan Agen Pengujian di AGENTS.md untuk tes perilaku end-to-end.',
 );

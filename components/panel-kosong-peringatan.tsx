@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import Link from 'next/link';
 import { JALUR_BRAND } from '@/lib/jalur-brand';
 
 export function PanelKosongPeringatan() {
@@ -16,9 +17,18 @@ export function PanelKosongPeringatan() {
       </div>
       <h2 className="text-xl font-semibold text-foreground">We&apos;re monitoring for you</h2>
       <p className="mt-3 max-w-md text-sm leading-relaxed text-muted">
-        No alerts yet. Add your medications, then run a scan to see personalized safety updates
-        linked to FDA and PubMed sources.
+        No alerts yet. MediGuard checks FDA.gov, PubMed, and medical news against your medication
+        list — click <strong className="text-foreground">Scan now</strong> above to run your first
+        check.
       </p>
+      <div className="mt-6 flex flex-wrap justify-center gap-3">
+        <Link
+          href="/dashboard/medications"
+          className="rounded-xl border border-border px-4 py-2 text-sm font-medium text-foreground transition hover:bg-slate-50"
+        >
+          Review your medications
+        </Link>
+      </div>
       <p className="mt-6 text-xs text-muted">
         MediGuard does not replace your doctor or pharmacist.
       </p>

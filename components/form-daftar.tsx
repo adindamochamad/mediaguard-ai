@@ -33,6 +33,9 @@ export function FormDaftar() {
     }
 
     if (data.session) {
+      void fetch('/api/email/welcome', { method: 'POST' }).catch(() => {
+        /* email opsional — jangan blokir onboarding */
+      });
       router.push('/dashboard');
       router.refresh();
       return;

@@ -34,6 +34,7 @@ const daftarWajibLokal = [
   'docs/01-CONCEPT.md',
   'docs/04-FEATURES.md',
   'docs/05-PITCH.md',
+  'docs/08-MANUAL-TESTING.md',
   'prompts/konstanta-kebijakan.json',
 ];
 

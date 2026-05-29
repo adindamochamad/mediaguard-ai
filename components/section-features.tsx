@@ -1,20 +1,20 @@
 const daftar_fitur = [
   {
-    judul: 'Curated sources',
+    judul: 'Traced to the source',
     deskripsi:
-      'FDA, DailyMed, and PubMed citations — short excerpts and canonical URLs, not copied label walls.',
+      'Every alert links directly to the FDA page, PubMed study, or DailyMed entry that triggered it. No black boxes — verify it yourself in one click.',
     ikon: '◈',
   },
   {
-    judul: 'Signal over noise',
+    judul: 'Only what matters to you',
     deskripsi:
-      'Confidence scoring and deduplication so duplicate sources do not flood your alert feed.',
+      'AI confidence scoring filters the noise. You see alerts relevant to your specific medications — not the 100,000 generic FDA communications your doctor ignores.',
     ikon: '◎',
   },
   {
-    judul: 'Private by default',
+    judul: 'Your data stays yours',
     deskripsi:
-      'Row-level security on Supabase keeps medication lists scoped to the signed-in user.',
+      'Medication names are scoped to your account only. No data sharing, no profiles built for advertisers — just the safety intelligence you signed up for.',
     ikon: '◇',
   },
 ];
@@ -25,7 +25,7 @@ export function SectionFeatures() {
       <div className="mx-auto max-w-6xl">
         <h2 className="text-sm font-semibold uppercase tracking-wider text-accent">Why MediGuard</h2>
         <p className="mt-3 max-w-xl text-2xl font-semibold tracking-tight text-foreground">
-          Built for demos that judges can trust
+          Know what the FDA knows — personalized to your medications
         </p>
         <div className="mt-12 grid gap-6 sm:grid-cols-3">
           {daftar_fitur.map((fitur) => (
