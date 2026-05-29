@@ -40,7 +40,7 @@ export function SectionHero() {
         </h1>
 
         <p className="mt-6 max-w-2xl text-lg leading-relaxed text-muted">
-          MediGuard monitors your medication list against FDA labels and live web signals — surfacing
+          MediGuard monitors your medication list against Food and Drug Administration (FDA) labels and live web signals — surfacing
           high-confidence alerts with links to primary sources. Built for caregivers and patients, not
           to replace your clinician.
         </p>

@@ -60,7 +60,7 @@ export function KontrolScanDashboard({
   const jalankan_scan = useCallback(async () => {
     set_sedang_memindai(true);
 
-    const id_toast = toast.loading('Scanning FDA, PubMed, and medical news…');
+    const id_toast = toast.loading('Scanning Food and Drug Administration (FDA), PubMed, and medical news…');
 
     try {
       const respons = await fetch('/api/scan', { method: 'POST' });

@@ -2,13 +2,13 @@ const daftar_fitur = [
   {
     judul: 'Traced to the source',
     deskripsi:
-      'Every alert links directly to the FDA page, PubMed study, or DailyMed entry that triggered it. No black boxes — verify it yourself in one click.',
+      'Every alert links directly to the Food and Drug Administration (FDA) page, PubMed study, or DailyMed entry that triggered it. No black boxes — verify it yourself in one click.',
     ikon: '◈',
   },
   {
     judul: 'Only what matters to you',
     deskripsi:
-      'AI confidence scoring filters the noise. You see alerts relevant to your specific medications — not the 100,000 generic FDA communications your doctor ignores.',
+      'AI confidence scoring filters the noise. You see alerts relevant to your specific medications — not the 100,000 generic Food and Drug Administration (FDA) communications your doctor ignores.',
     ikon: '◎',
   },
   {
@@ -25,7 +25,7 @@ export function SectionFeatures() {
       <div className="mx-auto max-w-6xl">
         <h2 className="text-sm font-semibold uppercase tracking-wider text-accent">Why MediGuard</h2>
         <p className="mt-3 max-w-xl text-2xl font-semibold tracking-tight text-foreground">
-          Know what the FDA knows — personalized to your medications
+          Know what the Food and Drug Administration (FDA) knows — personalized to your medications
         </p>
         <div className="mt-12 grid gap-6 sm:grid-cols-3">
           {daftar_fitur.map((fitur) => (

@@ -11,7 +11,7 @@
 [![Next.js](https://img.shields.io/badge/Next.js-14-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
 [![Supabase](https://img.shields.io/badge/Supabase-Realtime-3ecf8e?style=for-the-badge&logo=supabase)](https://supabase.com/)
 
-*Not a diagnosis tool. A patient-facing safety layer between public FDA data and the people who need it.*
+*Not a diagnosis tool. A patient-facing safety layer between public Food and Drug Administration (FDA) data and the people who need it.*
 
 [Problem](#-the-problem) · [Solution](#-the-solution) · [How it works](#-how-it-works) · [Features](#-features) · [Tech stack](#-tech-stack) · [Quick start](#-quick-start)
 
@@ -21,7 +21,7 @@
 
 ## The problem
 
-Every year, **1.5 million Americans** are harmed by medication errors. The FDA publishes **100,000+** drug safety signals annually — but patients receive **zero** proactive, personalized alerts.
+Every year, **1.5 million Americans** are harmed by medication errors. The Food and Drug Administration (FDA) publishes **100,000+** drug safety signals annually — but patients receive **zero** proactive, personalized alerts.
 
 - **35%** of clinicians ignore routine safety alerts (alert fatigue from irrelevant noise)
 - **125,000** deaths annually linked to adverse drug events
@@ -33,12 +33,12 @@ Every year, **1.5 million Americans** are harmed by medication errors. The FDA p
 
 ## The solution
 
-MediGuard AI is a personal medication safety intelligence agent. Add your medications once — MediGuard monitors FDA communications, PubMed studies, and medical news in real time, then delivers only the alerts that are relevant to *your* specific list, in plain language, with links directly to the source.
+MediGuard AI is a personal medication safety intelligence agent. Add your medications once — MediGuard monitors Food and Drug Administration (FDA) communications, PubMed studies, and medical news in real time, then delivers only the alerts that are relevant to *your* specific list, in plain language, with links directly to the source.
 
 | Legacy tools | MediGuard AI |
 |---|---|
 | Static drug database (months stale) | **Live web** via Nimble crawl |
-| All FDA alerts → everyone | **AI-filtered** to your medication list |
+| All Food and Drug Administration (FDA) alerts → everyone | **AI-filtered** to your medication list |
 | Provider-only clinical decision support | **Patient + caregiver** facing |
 | Medical jargon | **Plain language** + verifiable source URLs |
 
@@ -47,7 +47,7 @@ MediGuard AI is a personal medication safety intelligence agent. Add your medica
 ## How it works
 
 ```
-Nimble crawls FDA.gov / PubMed / DailyMed / medical news
+Nimble crawls FDA.gov (Food and Drug Administration) / PubMed / DailyMed / medical news
          ↓
 Claude matches findings to your medication list
     → scores severity (0–1 confidence)
@@ -170,9 +170,9 @@ Configure Nginx to proxy port 3001 and terminate SSL (Let's Encrypt recommended)
 | Step | Action |
 |---|---|
 | 1 | Sign up → add medications (e.g. Metformin, Lisinopril, Warfarin) |
-| 2 | Click **Scan Now** — live FDA + PubMed crawl via Nimble |
+| 2 | Click **Scan Now** — live Food and Drug Administration (FDA) + PubMed crawl via Nimble |
 | 3 | Alerts appear on dashboard in real time (Supabase Realtime) |
-| 4 | Click any alert → severity rationale, action items, direct FDA source link |
+| 4 | Click any alert → severity rationale, action items, direct Food and Drug Administration (FDA) source link |
 | 5 | Open **AI Chat** → ask a question → Claude streams an answer with citations |
 | 6 | Invite a caregiver → they receive a read-only link via email |
 
@@ -180,7 +180,7 @@ Configure Nginx to proxy port 3001 and terminate SSL (Let's Encrypt recommended)
 
 ## Disclaimer
 
-MediGuard aggregates **public** safety information from FDA.gov, PubMed, and DailyMed in consumer-friendly language. It is **not** medical advice, diagnosis, or treatment. Always consult your physician or pharmacist before changing any medication.
+MediGuard aggregates **public** safety information from FDA.gov (Food and Drug Administration), PubMed, and DailyMed in consumer-friendly language. It is **not** medical advice, diagnosis, or treatment. Always consult your physician or pharmacist before changing any medication.
 
 ---
 

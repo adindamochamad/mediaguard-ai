@@ -8,9 +8,9 @@ type KartuMockup = {
 const KARTU: KartuMockup[] = [
   {
     severity: 'critical',
-    judul: 'FDA Safety Alert: Warfarin — Increased Bleeding Risk with NSAIDs',
+    judul: 'Food and Drug Administration (FDA) Safety Alert: Warfarin — Increased Bleeding Risk with NSAIDs',
     ringkasan:
-      'The FDA has updated safety labeling for Warfarin to strengthen warnings about concurrent use with ibuprofen or naproxen.',
+      'The Food and Drug Administration (FDA) has updated safety labeling for Warfarin to strengthen warnings about concurrent use with ibuprofen or naproxen.',
     sumber: 'fda.gov · detected 4 hours ago',
   },
   {
@@ -40,7 +40,7 @@ const FITUR = [
     ikon: '⚡',
     judul: 'Real-time, not cached',
     deskripsi:
-      'Nimble crawls FDA.gov, PubMed, and DailyMed on demand — not from a database updated months ago.',
+      'Nimble crawls FDA.gov (Food and Drug Administration), PubMed, and DailyMed on demand — not from a database updated months ago.',
   },
   {
     ikon: '◎',

@@ -10,7 +10,7 @@ const WARNA_SEVERITY: Record<string, string> = {
 };
 
 const LABEL_SUMBER: Record<string, string> = {
-  fda:    'FDA.gov',
+  fda:    'Food and Drug Administration (FDA)',
   pubmed: 'PubMed / DailyMed',
 };
 

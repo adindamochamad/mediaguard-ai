@@ -20,7 +20,7 @@ const LANGKAH: Langkah[] = [
     nomor: '2',
     judul: 'Add your medications',
     deskripsi:
-      'Tell MediGuard which medications you take. We use this to find FDA and PubMed updates that are specific to you — not generic alerts.',
+      'Tell MediGuard which medications you take. We use this to find Food and Drug Administration (FDA) and PubMed updates that are specific to you — not generic alerts.',
     status: 'aktif',
     href: '/dashboard/medications',
     label_cta: 'Add medications →',
@@ -29,7 +29,7 @@ const LANGKAH: Langkah[] = [
     nomor: '3',
     judul: 'Run your first scan',
     deskripsi:
-      'One click. MediGuard crawls FDA.gov, PubMed, and medical news in real-time and surfaces what matters to your list.',
+      'One click. MediGuard crawls FDA.gov (Food and Drug Administration), PubMed, and medical news in real-time and surfaces what matters to your list.',
     status: 'menunggu',
   },
 ];

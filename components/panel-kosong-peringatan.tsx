@@ -17,7 +17,7 @@ export function PanelKosongPeringatan() {
       </div>
       <h2 className="text-xl font-semibold text-foreground">We&apos;re monitoring for you</h2>
       <p className="mt-3 max-w-md text-sm leading-relaxed text-muted">
-        No alerts yet. MediGuard checks FDA.gov, PubMed, and medical news against your medication
+        No alerts yet. MediGuard checks FDA.gov (Food and Drug Administration), PubMed, and medical news against your medication
         list — click <strong className="text-foreground">Scan now</strong> above to run your first
         check.
       </p>

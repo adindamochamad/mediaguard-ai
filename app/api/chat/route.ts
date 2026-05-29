@@ -62,7 +62,7 @@ async function kumpulkan_sumber_chat(daftar_obat: string[]): Promise<BarisSumber
       ...hasil_fda.item.slice(0, 3).map((item) => ({
         judul: item.judul,
         url: item.url,
-        asal: 'FDA',
+        asal: 'Food and Drug Administration (FDA)',
       })),
     );
   } catch {

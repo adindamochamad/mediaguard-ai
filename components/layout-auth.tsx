@@ -31,7 +31,7 @@ export function LayoutAuth({ children, judul, deskripsi }: PropsLayoutAuth) {
         <div className="relative space-y-8">
           <div className="space-y-3">
             <p className="text-[2.15rem] font-semibold leading-tight text-white">
-              The FDA alert from yesterday.
+              The Food and Drug Administration (FDA) alert from yesterday.
               <br />
               <span className="text-teal-300">Maria knows today.</span>
             </p>
@@ -52,7 +52,7 @@ export function LayoutAuth({ children, judul, deskripsi }: PropsLayoutAuth) {
               Warfarin — Increased Bleeding Risk with Concurrent NSAID Use
             </p>
             <p className="mt-1.5 line-clamp-2 text-xs leading-relaxed text-white/55">
-              The FDA has updated safety labeling for Warfarin to strengthen warnings about concurrent
+              The Food and Drug Administration (FDA) has updated safety labeling for Warfarin to strengthen warnings about concurrent
               use with ibuprofen or naproxen. Co-administration significantly increases bleeding risk.
             </p>
             <div className="mt-3 flex gap-2">

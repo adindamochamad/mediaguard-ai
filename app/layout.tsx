@@ -22,7 +22,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(url_aplikasi),
   title: 'MediGuard AI — Medication Safety Intelligence',
   description:
-    'Real-time medication safety alerts from curated FDA and live web sources — with traceable citations, not medical advice.',
+    'Real-time medication safety alerts from curated Food and Drug Administration (FDA) and live web sources — with traceable citations, not medical advice.',
   manifest: '/site.webmanifest',
   icons: {
     icon: [
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
     siteName: 'MediGuard AI',
     title: 'MediGuard AI — Medication Safety Intelligence',
     description:
-      'Personal medication safety alerts from FDA labels and live web signals — every alert links to a primary source.',
+      'Personal medication safety alerts from Food and Drug Administration (FDA) labels and live web signals — every alert links to a primary source.',
     images: [
       {
         url: JALUR_BRAND.ogSocial,

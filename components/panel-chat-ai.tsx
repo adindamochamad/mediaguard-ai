@@ -131,7 +131,7 @@ export function PanelChatAi() {
           value={pertanyaan}
           onChange={(event) => set_pertanyaan(event.target.value)}
           rows={3}
-          placeholder="Example: Any new FDA warning about Metformin this week?"
+          placeholder="Example: Any new Food and Drug Administration (FDA) warning about Metformin this week?"
           className="w-full rounded-xl border border-border bg-white px-3 py-2 text-sm text-foreground outline-none ring-accent transition focus:ring-2"
         />
         <div className="flex flex-wrap items-center gap-3">
@@ -163,7 +163,7 @@ export function PanelChatAi() {
             {[
               'Is there anything new about my medications I should worry about?',
               'What are the interactions between Warfarin and common over-the-counter drugs?',
-              'Are any of my medications currently under FDA recall or safety review?',
+              'Are any of my medications currently under Food and Drug Administration (FDA) recall or safety review?',
               'What should I watch out for with Metformin long-term?',
             ].map((prompt) => (
               <button

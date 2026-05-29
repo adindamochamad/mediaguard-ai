@@ -238,7 +238,7 @@ export function DaftarObat() {
         <div className="rounded-2xl border border-dashed border-border bg-card/50 px-6 py-12 text-center">
           <h2 className="text-lg font-semibold text-foreground">Your list is empty</h2>
           <p className="mx-auto mt-2 max-w-md text-sm text-muted">
-            Add the prescriptions you take regularly. MediGuard uses this to find FDA and PubMed
+            Add the prescriptions you take regularly. MediGuard uses this to find Food and Drug Administration (FDA) and PubMed
             updates that matter to you.
           </p>
           <button
