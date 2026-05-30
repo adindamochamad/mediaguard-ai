@@ -6,7 +6,7 @@ import { SectionRoadmap } from '@/components/section-roadmap';
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen">
       <LayoutHeader />
       <main>
         <SectionHero />

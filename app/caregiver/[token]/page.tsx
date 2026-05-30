@@ -67,7 +67,7 @@ export default async function HalamanKaregiver({
   const daftar_alert = (alerts ?? []) as Alert[];
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen">
       <header className="border-b border-border bg-card/80 px-6 py-4">
         <div className="mx-auto flex max-w-4xl items-center justify-between">
           <span className="text-base font-semibold text-foreground">MediGuard AI</span>

@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Inter, JetBrains_Mono } from 'next/font/google';
 import { JALUR_BRAND } from '@/lib/jalur-brand';
+import { LatarInteraktif } from '@/components/latar-interaktif';
 import './globals.css';
 
 const url_aplikasi =
@@ -64,6 +65,10 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth">
       <body className={`${font_sans.variable} ${font_mono.variable} min-h-screen antialiased`}>
+        {/* Latar ambient interaktif — default seluruh app, di belakang semua konten */}
+        <div className="pointer-events-none fixed inset-0 -z-10">
+          <LatarInteraktif />
+        </div>
         {children}
       </body>
     </html>

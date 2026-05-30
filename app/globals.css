@@ -15,7 +15,13 @@
 
 body {
   color: var(--foreground);
-  background: var(--background);
+  /* Lapisan gradient default seluruh app — beri kedalaman & warna (profesional) */
+  background:
+    radial-gradient(50rem 50rem at 88% -6%, #a7e8da 0%, transparent 48%),
+    radial-gradient(44rem 44rem at -8% 106%, #aaddf2 0%, transparent 46%),
+    radial-gradient(40rem 40rem at 50% 120%, #c9ece4 0%, transparent 50%),
+    var(--background);
+  background-attachment: fixed;
   font-family: var(--font-sans), system-ui, sans-serif;
 }
 
@@ -45,4 +51,40 @@ body {
     -webkit-backdrop-filter: blur(12px);
     border: 1px solid rgba(255, 255, 255, 0.15);
   }
+
+  /* Grid garis dengan mask lembut — untuk lapisan latar */
+  .bg-grid-fine {
+    background-image:
+      linear-gradient(to right, #cbd5e1 1px, transparent 1px),
+      linear-gradient(to bottom, #cbd5e1 1px, transparent 1px);
+    background-size: 44px 44px;
+    -webkit-mask-image: radial-gradient(ellipse 85% 70% at 50% 35%, #000 35%, transparent 78%);
+    mask-image: radial-gradient(ellipse 85% 70% at 50% 35%, #000 35%, transparent 78%);
+  }
+
+  /* Aurora bergerak pelan — animasi ambient */
+  .animate-aurora-a {
+    animation: aurora-a 24s ease-in-out infinite;
+    will-change: transform;
+  }
+  .animate-aurora-b {
+    animation: aurora-b 30s ease-in-out infinite;
+    will-change: transform;
+  }
+}
+
+@keyframes aurora-a {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  33%      { transform: translate3d(6%, 8%, 0) scale(1.12); }
+  66%      { transform: translate3d(-5%, 3%, 0) scale(0.94); }
+}
+@keyframes aurora-b {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50%      { transform: translate3d(-7%, -6%, 0) scale(1.14); }
+}
+
+/* Hormati preferensi gerak minimal */
+@media (prefers-reduced-motion: reduce) {
+  .animate-aurora-a,
+  .animate-aurora-b { animation: none; }
 }

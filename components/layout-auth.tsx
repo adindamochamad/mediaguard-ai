@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { BrandLogo } from '@/components/brand-logo';
+import { LatarInteraktif } from '@/components/latar-interaktif';
 
 type PropsLayoutAuth = {
   children: React.ReactNode;
@@ -121,10 +122,13 @@ export function LayoutAuth({ children, judul, deskripsi }: PropsLayoutAuth) {
       </div>
 
       {/* ── Right form panel ────────────────────────────────────── */}
-      <div className="flex min-h-screen flex-col bg-background">
+      <div className="relative flex min-h-screen flex-col bg-background">
+
+        {/* Latar ambient interaktif */}
+        <LatarInteraktif />
 
         {/* Mobile header only */}
-        <header className="border-b border-border/80 bg-card/80 backdrop-blur-md lg:hidden">
+        <header className="relative z-10 border-b border-border/80 bg-card/80 backdrop-blur-md lg:hidden">
           <div className="mx-auto flex h-16 max-w-6xl items-center px-6">
             <Link href="/" className="flex items-center gap-2.5">
               <BrandLogo ukuran={32} />
@@ -133,7 +137,7 @@ export function LayoutAuth({ children, judul, deskripsi }: PropsLayoutAuth) {
           </div>
         </header>
 
-        <main className="flex flex-1 flex-col items-center justify-center px-6 py-12 sm:py-16">
+        <main className="relative z-10 flex flex-1 flex-col items-center justify-center px-6 py-12 sm:py-16">
           <div className="w-full max-w-sm">
             <div className="mb-8 text-center">
               <div className="mb-6 hidden justify-center lg:flex">
@@ -146,7 +150,8 @@ export function LayoutAuth({ children, judul, deskripsi }: PropsLayoutAuth) {
               <p className="mt-2 text-sm text-muted">{deskripsi}</p>
             </div>
 
-            <div className="rounded-2xl border border-border bg-card p-6 shadow-soft sm:p-8">
+            {/* Kartu form dengan sedikit transparansi agar latar terlihat lembut di belakang */}
+            <div className="rounded-2xl border border-border bg-card/85 p-6 shadow-soft backdrop-blur-sm sm:p-8">
               {children}
             </div>
           </div>

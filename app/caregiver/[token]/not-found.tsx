@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 export default function KaregiverTidakDitemukan() {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen">
       <header className="border-b border-border bg-card/80 px-6 py-4">
         <div className="mx-auto max-w-4xl">
           <span className="text-base font-semibold text-foreground">MediGuard AI</span>
