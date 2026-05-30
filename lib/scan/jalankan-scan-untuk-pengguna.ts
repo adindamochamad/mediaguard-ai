@@ -21,7 +21,17 @@ import {
   type DataAlertKritisUntukEmail,
 } from '@/lib/email';
 
-const BATAS_OBAT_UNTUK_CRAWL = 8;
+const BATAS_OBAT_UNTUK_CRAWL = 9;
+const TIMEOUT_NIMBLE_MS = 20_000;
+
+function dengan_timeout<T>(promise: Promise<T>, ms: number): Promise<T> {
+  return Promise.race([
+    promise,
+    new Promise<never>((_, reject) =>
+      setTimeout(() => reject(new Error(`Nimble timeout setelah ${ms}ms`)), ms),
+    ),
+  ]);
+}
 
 export type JenisScan = 'manual' | 'cron';
 
@@ -54,7 +64,7 @@ async function kumpulkan_konten_nimble(daftar_obat: Obat[]): Promise<{
   let hasil_fda;
 
   try {
-    hasil_fda = await crawlFDAAlerts();
+    hasil_fda = await dengan_timeout(crawlFDAAlerts(), TIMEOUT_NIMBLE_MS);
     jumlah_sumber += 1;
   } catch {
     hasil_fda = undefined;
@@ -69,14 +79,14 @@ async function kumpulkan_konten_nimble(daftar_obat: Obat[]): Promise<{
       nama_untuk_crawl.map(async (nama_obat) => {
         try {
           const [berita, pubmed] = await Promise.all([
-            searchMedicalNews(nama_obat),
-            crawlPubMed(nama_obat),
+            dengan_timeout(searchMedicalNews(nama_obat), TIMEOUT_NIMBLE_MS),
+            dengan_timeout(crawlPubMed(nama_obat), TIMEOUT_NIMBLE_MS),
           ]);
           berita_per_obat.push({ nama_obat, hasil: berita });
           pubmed_per_obat.push(pubmed);
           jumlah_sumber += 2;
         } catch {
-          /* satu obat gagal — lanjut obat lain */
+          /* satu obat atau timeout — lanjut obat lain */
         }
       }),
     );

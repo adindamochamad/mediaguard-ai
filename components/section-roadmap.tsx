@@ -8,24 +8,38 @@ type KartuMockup = {
 const KARTU: KartuMockup[] = [
   {
     severity: 'critical',
-    judul: 'Food and Drug Administration (FDA) Safety Alert: Warfarin — Increased Bleeding Risk with NSAIDs',
+    judul: 'FDA Safety Alert: Warfarin — Increased Bleeding Risk with NSAIDs',
     ringkasan:
-      'The Food and Drug Administration (FDA) has updated safety labeling for Warfarin to strengthen warnings about concurrent use with ibuprofen or naproxen.',
+      'The FDA has updated safety labeling for Warfarin to strengthen warnings about concurrent use with ibuprofen or naproxen. Co-administration significantly increases risk of serious bleeding events.',
     sumber: 'fda.gov · detected 4 hours ago',
+  },
+  {
+    severity: 'critical',
+    judul: 'FDA Black Box Warning: Sertraline — Increased Suicidal Thoughts in Young Adults',
+    ringkasan:
+      'Antidepressants may increase the risk of suicidal thinking in patients aged 18–24 during the first 1–2 months of treatment. Monitor closely for unusual behavior changes.',
+    sumber: 'fda.gov · detected 6 hours ago',
+  },
+  {
+    severity: 'warning',
+    judul: 'FDA Safety Communication: Atorvastatin — Muscle Pain and Rhabdomyolysis Risk',
+    ringkasan:
+      'Patients on Atorvastatin 40–80mg have elevated risk of muscle injury, especially when combined with certain antibiotics or antifungals.',
+    sumber: 'fda.gov · detected today',
   },
   {
     severity: 'warning',
     judul: 'PubMed Study: Metformin — Vitamin B12 Deficiency Risk',
     ringkasan:
-      'A 2024 meta-analysis confirms long-term Metformin use is associated with a 20–30% increased risk of B12 deficiency.',
+      'A 2024 meta-analysis confirms long-term Metformin use is associated with a 20–30% increased risk of B12 deficiency, which may cause peripheral neuropathy.',
     sumber: 'pubmed.ncbi.nlm.nih.gov · detected today',
   },
   {
     severity: 'info',
-    judul: 'DailyMed: Lisinopril — Dry Cough Reporting Guidance Updated',
+    judul: 'FDA Guidance: Levothyroxine — Drug Interactions Affecting Absorption',
     ringkasan:
-      'Prescribing information clarified: persistent dry cough affects ~10–15% of patients and resolves on discontinuation.',
-    sumber: 'dailymed.nlm.nih.gov · detected today',
+      'Calcium, iron, and antacids significantly reduce Levothyroxine absorption. Take on an empty stomach, 30–60 min before breakfast, spaced 4 hours from supplements.',
+    sumber: 'fda.gov · detected today',
   },
 ];
 
@@ -108,7 +122,7 @@ export function SectionRoadmap() {
             <div className="flex items-center justify-between border-b border-border bg-background px-5 py-4">
               <div>
                 <p className="text-sm font-semibold text-foreground">Alerts</p>
-                <p className="text-xs text-muted">3 medications monitored</p>
+                <p className="text-xs text-muted">9 medications monitored</p>
               </div>
               <div className="rounded-lg bg-accent px-3 py-1.5 text-xs font-semibold text-white">
                 Scan now

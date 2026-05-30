@@ -52,7 +52,9 @@ async function pindaiPolaBahaya(jalurAbsolut, relatifUntuklaporan) {
   if (
     namaBawah === 'verify-project.mjs' ||
     namaBawah === 'run-agents.mjs' ||
-    namaBawah === 'post-tool-verify.mjs'
+    namaBawah === 'post-tool-verify.mjs' ||
+    namaBawah === '.env.local' ||
+    namaBawah === '.env'
   ) {
     return temuan;
   }
