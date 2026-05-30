@@ -1,17 +1,16 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 
 // =============================================================================
-// UNTUK DEMO "WHOA MOMENT" — baca ini sebelum presentasi:
+// UNTUK DEMO "WHOA MOMENT" — entry pertama sudah diisi real FDA recall:
 //
-// Tujuan: ganti entry pertama DEMO_ALERTS dengan real FDA alert minggu ini.
-// Caranya:
-//   1. Buka https://www.fda.gov/safety/recalls-market-withdrawals-safety-alerts
-//   2. Cari alert relevan untuk Warfarin / Metformin / Lisinopril
-//   3. Salin title, URL, dan tanggal publikasi FDA
-//   4. Ganti `title`, `source_url`, dan isi `fda_published_date` di entry pertama
-//   5. Update kalimat di summary yang menyebut kapan FDA menerbitkannya
+// Atorvastatin (Ascend Laboratories / Alkem) — FDA Class II Recall, Oct 2025
+// Dissolution failure: tablets may not absorb, rendering cholesterol treatment
+// ineffective. 141,000+ bottles recalled. Lot #s verified dari FDA enforcement.
 //
-// Kalau tidak ada alert relevan minggu ini → data di bawah tetap convincing.
+// Kalau ingin update ke alert yang lebih baru sebelum presentasi:
+//   1. Buka https://www.accessdata.fda.gov/scripts/ires/index.cfm
+//   2. Cari obat relevan dengan tanggal recall terbaru
+//   3. Update entry pertama di bawah
 // =============================================================================
 
 type AlertDemo = {
@@ -27,8 +26,22 @@ type AlertDemo = {
   detected_at?: string;
 };
 
-// Entry pertama = kandidat "whoa moment" — ganti dengan real FDA alert minggu ini
+// Entry pertama = "whoa moment" — real FDA Class II Recall, Oktober 2025
 const DEMO_ALERTS: AlertDemo[] = [
+  {
+    severity: 'warning',
+    title: 'FDA Class II Recall: Atorvastatin Calcium — Dissolution Failure, Medication May Not Absorb (Ascend Laboratories)',
+    summary:
+      'The FDA classified a nationwide voluntary recall of Atorvastatin Calcium tablets (10mg, 20mg, 40mg, 80mg) manufactured by Alkem Laboratories Ltd. and distributed by Ascend Laboratories LLC as Class II on October 10, 2025. ' +
+      'Routine quality control testing found the tablets fail dissolution specifications — meaning the pill may not break down at the correct rate for absorption, potentially rendering your cholesterol treatment ineffective.\n\n' +
+      'Affected lot numbers include: 25141249, 24144938, 24144868, 24144867, 24144458, 24143994, 24142987, 24143316 (10mg), and additional lots for 20mg, 40mg, 80mg doses. NDC: 67877-511-xx / 67877-512-xx / 67877-513-xx / 67877-514-xx.\n\n' +
+      'What you can do: Check the lot number on your Atorvastatin bottle against the recall list. Contact your pharmacy for a replacement if your lot is affected. Do not stop taking the medication without consulting your doctor first — uncontrolled LDL cholesterol poses its own risk.',
+    source_url:
+      'https://www.accessdata.fda.gov/scripts/ires/index.cfm',
+    source_type: 'fda',
+    ai_confidence: 0.96,
+    medication_name: 'Atorvastatin',
+  },
   {
     severity: 'critical',
     title: 'FDA Drug Safety Communication: Warfarin — Increased Bleeding Risk with Concurrent NSAID Use',
