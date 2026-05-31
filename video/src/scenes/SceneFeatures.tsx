@@ -55,7 +55,7 @@ export const SceneFeatures: React.FC = () => {
           <Card
             icon="⚡"
             title="Real-time, not cached"
-            body="Nimble crawls FDA.gov, PubMed, and DailyMed on demand — not from a database updated months ago."
+            body="Nimble crawls FDA.gov, PubMed, and medical news on demand — not from a database updated months ago."
             delay={20}
           />
           <Card

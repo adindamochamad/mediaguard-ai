@@ -65,7 +65,7 @@ export function SectionHero() {
           {[
             { label: 'FDA.gov', sub: 'Drug safety alerts' },
             { label: 'PubMed', sub: 'Drug interaction studies' },
-            { label: 'DailyMed', sub: 'Label updates' },
+            { label: 'Medical news', sub: 'Safety headlines' },
           ].map((src) => (
             <div key={src.label} className="flex items-center gap-2">
               <span className="h-1.5 w-1.5 rounded-full bg-accent" aria-hidden />

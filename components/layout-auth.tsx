@@ -32,7 +32,7 @@ export function LayoutAuth({ children, judul, deskripsi }: PropsLayoutAuth) {
 
           {/* Source badge */}
           <div className="flex flex-wrap gap-2">
-            {['Food and Drug Administration (FDA)', 'PubMed', 'DailyMed'].map((src) => (
+            {['Food and Drug Administration (FDA)', 'PubMed', 'Medical news'].map((src) => (
               <span
                 key={src}
                 className="rounded-full border border-white/15 bg-white/8 px-3 py-1 text-[11px] font-medium text-white/60 backdrop-blur-sm"

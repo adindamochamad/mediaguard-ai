@@ -47,7 +47,7 @@ MediGuard AI is a personal medication safety intelligence agent. Add your medica
 ## How it works
 
 ```
-Nimble crawls FDA.gov (Food and Drug Administration) / PubMed / DailyMed / medical news
+Nimble crawls FDA.gov (Food and Drug Administration) / PubMed / medical news
          ↓
 Claude matches findings to your medication list
     → scores severity (0–1 confidence)
@@ -180,7 +180,7 @@ Configure Nginx to proxy port 3001 and terminate SSL (Let's Encrypt recommended)
 
 ## Disclaimer
 
-MediGuard aggregates **public** safety information from FDA.gov (Food and Drug Administration), PubMed, and DailyMed in consumer-friendly language. It is **not** medical advice, diagnosis, or treatment. Always consult your physician or pharmacist before changing any medication.
+MediGuard aggregates **public** safety information from FDA.gov (Food and Drug Administration), PubMed, and medical news in consumer-friendly language. It is **not** medical advice, diagnosis, or treatment. Always consult your physician or pharmacist before changing any medication.
 
 ---
 

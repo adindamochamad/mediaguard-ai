@@ -2,7 +2,7 @@ const daftar_fitur = [
   {
     judul: 'Traced to the source',
     deskripsi:
-      'Every alert links directly to the Food and Drug Administration (FDA) page, PubMed study, or DailyMed entry that triggered it. No black boxes — verify it yourself in one click.',
+      'Every alert links directly to the Food and Drug Administration (FDA) page, PubMed study, or medical news article that triggered it. No black boxes — verify it yourself in one click.',
     ikon: '◈',
   },
   {

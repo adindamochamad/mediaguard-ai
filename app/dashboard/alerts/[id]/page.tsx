@@ -11,7 +11,7 @@ const WARNA_SEVERITY: Record<string, string> = {
 
 const LABEL_SUMBER: Record<string, string> = {
   fda:    'Food and Drug Administration (FDA)',
-  pubmed: 'PubMed / DailyMed',
+  pubmed: 'PubMed',
 };
 
 function format_tanggal(iso: string) {

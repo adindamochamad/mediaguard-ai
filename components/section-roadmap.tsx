@@ -54,7 +54,7 @@ const FITUR = [
     ikon: '⚡',
     judul: 'Real-time, not cached',
     deskripsi:
-      'Nimble crawls FDA.gov (Food and Drug Administration), PubMed, and DailyMed on demand — not from a database updated months ago.',
+      'Nimble crawls FDA.gov (Food and Drug Administration), PubMed, and medical news on demand — not from a database updated months ago.',
   },
   {
     ikon: '◎',
@@ -114,7 +114,7 @@ export function SectionRoadmap() {
               <span className="h-3 w-3 rounded-full bg-amber-400" aria-hidden />
               <span className="h-3 w-3 rounded-full bg-emerald-400" aria-hidden />
               <div className="ml-3 flex-1 rounded-md border border-border bg-white px-3 py-1 text-xs text-muted">
-                mediguard.ai/dashboard
+                mediguard.adindamochamad.com/dashboard
               </div>
             </div>
 

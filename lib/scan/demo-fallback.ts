@@ -35,7 +35,7 @@ const DEMO_ALERTS: AlertDemo[] = [
       'The FDA classified a nationwide voluntary recall of Atorvastatin Calcium tablets (10mg, 20mg, 40mg, 80mg) manufactured by Alkem Laboratories Ltd. and distributed by Ascend Laboratories LLC as Class II on October 10, 2025. ' +
       'Routine quality control testing found the tablets fail dissolution specifications — meaning the pill may not break down at the correct rate for absorption, potentially rendering your cholesterol treatment ineffective.\n\n' +
       'Affected lot numbers include: 25141249, 24144938, 24144868, 24144867, 24144458, 24143994, 24142987, 24143316 (10mg), and additional lots for 20mg, 40mg, 80mg doses. NDC: 67877-511-xx / 67877-512-xx / 67877-513-xx / 67877-514-xx.\n\n' +
-      'What you can do: Check the lot number on your Atorvastatin bottle against the recall list. Contact your pharmacy for a replacement if your lot is affected. Do not stop taking the medication without consulting your doctor first — uncontrolled LDL cholesterol poses its own risk.',
+      'What you can do: Check the lot number on your Atorvastatin bottle against the recall list. Contact your pharmacy for a replacement if your lot is affected. Keep taking your prescribed dose unless your doctor tells you otherwise — uncontrolled LDL cholesterol poses its own risk.',
     source_url:
       'https://www.accessdata.fda.gov/scripts/ires/index.cfm',
     source_type: 'fda',
