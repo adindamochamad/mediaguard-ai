@@ -88,7 +88,7 @@ export function PanelKaregiver() {
 
   return (
     <div className="mt-8 space-y-8">
-      <section className="rounded-2xl border border-border bg-card p-6 shadow-soft">
+      <section className="card-surface p-6">
         <h2 className="text-base font-semibold text-foreground">Share with a caregiver</h2>
         <p className="mt-1 text-sm text-muted">
           Invite a family member or doctor to view your alerts. They get a read-only link — no
@@ -115,7 +115,7 @@ export function PanelKaregiver() {
 
       </section>
 
-      <section className="rounded-2xl border border-border bg-card p-6 shadow-soft">
+      <section className="card-surface p-6">
         <h2 className="text-base font-semibold text-foreground">Active caregivers</h2>
 
         {sedang_muat ? (

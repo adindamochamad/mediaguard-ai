@@ -1,21 +1,26 @@
 import type { Metadata } from 'next';
-import { Inter, JetBrains_Mono } from 'next/font/google';
+import dynamic from 'next/dynamic';
+import { Plus_Jakarta_Sans, Source_Serif_4 } from 'next/font/google';
 import { JALUR_BRAND } from '@/lib/jalur-brand';
-import { LatarInteraktif } from '@/components/latar-interaktif';
 import './globals.css';
+
+const LatarThreeKesehatan = dynamic(
+  () => import('@/components/latar-three-kesehatan').then((m) => m.LatarThreeKesehatan),
+  { ssr: false },
+);
 
 const url_aplikasi =
   process.env.NEXT_PUBLIC_APP_URL?.trim() || 'http://localhost:3001';
 
-const font_sans = Inter({
+const font_sans = Plus_Jakarta_Sans({
   subsets: ['latin'],
   variable: '--font-sans',
   display: 'swap',
 });
 
-const font_mono = JetBrains_Mono({
+const font_display = Source_Serif_4({
   subsets: ['latin'],
-  variable: '--font-mono',
+  variable: '--font-display',
   display: 'swap',
 });
 
@@ -64,11 +69,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="scroll-smooth">
-      <body className={`${font_sans.variable} ${font_mono.variable} min-h-screen antialiased`}>
-        {/* Latar ambient interaktif — default seluruh app, di belakang semua konten */}
-        <div className="pointer-events-none fixed inset-0 -z-10">
-          <LatarInteraktif />
-        </div>
+      <body className={`${font_sans.variable} ${font_display.variable} min-h-screen antialiased`}>
+        <LatarThreeKesehatan />
         {children}
       </body>
     </html>

@@ -19,10 +19,15 @@ const config: Config = {
       },
       fontFamily: {
         sans: ['var(--font-sans)', 'system-ui', 'sans-serif'],
+        display: ['var(--font-display)', 'Georgia', 'serif'],
         mono: ['var(--font-mono)', 'ui-monospace', 'monospace'],
       },
       boxShadow: {
-        soft: '0 1px 3px 0 rgb(15 23 42 / 0.06), 0 8px 24px -4px rgb(15 23 42 / 0.08)',
+        soft: '0 1px 2px rgb(28 25 23 / 0.04), 0 4px 16px rgb(28 25 23 / 0.06)',
+        card: '0 1px 3px rgb(28 25 23 / 0.05)',
+      },
+      borderRadius: {
+        DEFAULT: '0.5rem',
       },
     },
   },

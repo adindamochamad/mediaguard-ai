@@ -68,7 +68,7 @@ export default async function HalamanKaregiver({
 
   return (
     <div className="min-h-screen">
-      <header className="border-b border-border bg-card/80 px-6 py-4">
+      <header className="header-kaca px-6 py-4">
         <div className="mx-auto flex max-w-4xl items-center justify-between">
           <span className="text-base font-semibold text-foreground">MediGuard AI</span>
           <span className="rounded-full bg-accent-soft px-3 py-1 text-xs font-medium text-accent">
@@ -87,7 +87,7 @@ export default async function HalamanKaregiver({
 
         <div className="mt-8">
           {daftar_alert.length === 0 ? (
-            <div className="rounded-2xl border border-border bg-card p-10 text-center">
+            <div className="card-surface p-10 text-center">
               <p className="text-sm text-muted">No alerts yet. Check back after a medication scan.</p>
             </div>
           ) : (
@@ -95,7 +95,7 @@ export default async function HalamanKaregiver({
               {daftar_alert.map((alert) => (
                 <li
                   key={alert.id}
-                  className="rounded-2xl border border-border bg-card p-5 shadow-soft"
+                  className="card-surface border-l-[3px] border-l-teal-500 p-5"
                 >
                   <div className="flex flex-wrap items-center gap-2">
                     <span

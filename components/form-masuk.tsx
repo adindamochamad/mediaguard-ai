@@ -63,7 +63,7 @@ export function FormMasuk() {
           required
           value={email}
           onChange={(e) => set_email(e.target.value)}
-          className="mt-1.5 w-full rounded-xl border border-border bg-card px-4 py-2.5 text-sm text-foreground outline-none ring-accent/30 transition-shadow focus:ring-2"
+          className="input-field"
           placeholder="you@example.com"
         />
       </div>
@@ -80,7 +80,7 @@ export function FormMasuk() {
           minLength={8}
           value={kata_sandi}
           onChange={(e) => set_kata_sandi(e.target.value)}
-          className="mt-1.5 w-full rounded-xl border border-border bg-card px-4 py-2.5 text-sm text-foreground outline-none ring-accent/30 transition-shadow focus:ring-2"
+          className="input-field"
           placeholder="••••••••"
         />
       </div>
@@ -88,7 +88,7 @@ export function FormMasuk() {
       <button
         type="submit"
         disabled={sedang_memuat}
-        className="w-full rounded-xl bg-accent px-4 py-3 text-sm font-semibold text-white shadow-soft transition-colors hover:bg-teal-700 disabled:cursor-not-allowed disabled:opacity-60"
+        className="btn-primary w-full py-3"
       >
         {sedang_memuat ? 'Signing in…' : 'Sign in'}
       </button>

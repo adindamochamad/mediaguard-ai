@@ -3,88 +3,87 @@
 @tailwind utilities;
 
 :root {
-  --background: #f8fafc;
-  --foreground: #0f172a;
-  --muted: #64748b;
-  --accent: #0d9488;
-  --accent-soft: #ccfbf1;
+  --background: #fafaf9;
+  --foreground: #1c1917;
+  --muted: #78716c;
+  --accent: #115e59;
+  --accent-hover: #0f4c47;
+  --accent-soft: #ecfdf5;
   --card: #ffffff;
-  --border: #e2e8f0;
+  --border: #e7e5e4;
   --ring: #99f6e4;
 }
 
 body {
   color: var(--foreground);
-  /* Lapisan gradient default seluruh app — beri kedalaman & warna (profesional) */
-  background:
-    radial-gradient(50rem 50rem at 88% -6%, #a7e8da 0%, transparent 48%),
-    radial-gradient(44rem 44rem at -8% 106%, #aaddf2 0%, transparent 46%),
-    radial-gradient(40rem 40rem at 50% 120%, #c9ece4 0%, transparent 50%),
-    var(--background);
-  background-attachment: fixed;
+  background-color: var(--background);
   font-family: var(--font-sans), system-ui, sans-serif;
+}
+
+@layer base {
+  h1,
+  h2,
+  .font-display {
+    font-family: var(--font-display), Georgia, 'Times New Roman', serif;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center justify-center rounded-lg bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[var(--accent-hover)] disabled:cursor-not-allowed disabled:opacity-60;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center rounded-lg border border-white/60 px-5 py-2.5 text-sm font-semibold text-foreground transition-colors;
+    background-color: rgb(255 255 255 / 0.65);
+  }
+
+  .btn-secondary:hover {
+    background-color: rgb(255 255 255 / 0.85);
+  }
+
+  .input-field {
+    @apply mt-1.5 w-full rounded-lg border border-border bg-card px-3.5 py-2.5 text-sm text-foreground outline-none transition-shadow placeholder:text-stone-400 focus:border-accent focus:ring-2 focus:ring-teal-900/10;
+  }
+
+  .card-surface {
+    @apply rounded-xl border border-white/70 shadow-card backdrop-blur-md;
+    background-color: rgb(255 255 255 / 0.78);
+    box-shadow:
+      0 1px 2px rgb(28 25 23 / 0.04),
+      0 8px 32px rgb(17 94 89 / 0.06);
+  }
+
+  .section-kaca {
+    @apply border-y border-white/50 backdrop-blur-sm;
+    background-color: rgb(255 255 255 / 0.45);
+  }
+
+  .panel-kaca {
+    @apply rounded-xl border border-white/60 backdrop-blur-lg;
+    background-color: rgb(255 255 255 / 0.72);
+  }
+
+  .header-kaca {
+    @apply border-b border-white/50 bg-white/70 backdrop-blur-lg;
+  }
+
+  .label-section {
+    @apply text-xs font-semibold uppercase tracking-[0.14em] text-stone-500;
+  }
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
   }
-
-  /* Subtle dot grid — use on large content areas */
-  .bg-dot-grid {
-    background-image: radial-gradient(circle, #cbd5e1 1px, transparent 1px);
-    background-size: 24px 24px;
-  }
-
-  /* Gradient text */
-  .text-gradient {
-    background: linear-gradient(135deg, var(--accent) 0%, #0891b2 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-
-  /* Glass card — for dark panels */
-  .glass-card {
-    background: rgba(255, 255, 255, 0.08);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-  }
-
-  /* Grid garis dengan mask lembut — untuk lapisan latar */
-  .bg-grid-fine {
-    background-image:
-      linear-gradient(to right, #cbd5e1 1px, transparent 1px),
-      linear-gradient(to bottom, #cbd5e1 1px, transparent 1px);
-    background-size: 44px 44px;
-    -webkit-mask-image: radial-gradient(ellipse 85% 70% at 50% 35%, #000 35%, transparent 78%);
-    mask-image: radial-gradient(ellipse 85% 70% at 50% 35%, #000 35%, transparent 78%);
-  }
-
-  /* Aurora bergerak pelan — animasi ambient */
-  .animate-aurora-a {
-    animation: aurora-a 24s ease-in-out infinite;
-    will-change: transform;
-  }
-  .animate-aurora-b {
-    animation: aurora-b 30s ease-in-out infinite;
-    will-change: transform;
-  }
 }
 
-@keyframes aurora-a {
-  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
-  33%      { transform: translate3d(6%, 8%, 0) scale(1.12); }
-  66%      { transform: translate3d(-5%, 3%, 0) scale(0.94); }
-}
-@keyframes aurora-b {
-  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
-  50%      { transform: translate3d(-7%, -6%, 0) scale(1.14); }
-}
-
-/* Hormati preferensi gerak minimal */
 @media (prefers-reduced-motion: reduce) {
   .animate-aurora-a,
-  .animate-aurora-b { animation: none; }
+  .animate-aurora-b {
+    animation: none;
+  }
 }

@@ -45,7 +45,7 @@ export default async function HalamanDashboard() {
     return (
       <div className="mx-auto max-w-4xl space-y-6">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight text-foreground">Alerts</h1>
+          <h1 className="font-display text-2xl text-foreground">Alerts</h1>
           <p className="mt-1 text-sm text-muted">
             Personalized safety updates for your medication list.
           </p>
@@ -59,7 +59,7 @@ export default async function HalamanDashboard() {
     <div className="mx-auto max-w-4xl space-y-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight text-foreground">Alerts</h1>
+          <h1 className="font-display text-2xl text-foreground">Alerts</h1>
           <p className="mt-1 text-sm text-muted">
             Personalized safety updates for your medication list.
           </p>

@@ -58,7 +58,7 @@ export function FormObat({
   return (
     <form
       onSubmit={tangani_kirim}
-      className="rounded-2xl border border-border bg-card p-5 shadow-soft sm:p-6"
+      className="card-surface p-5 sm:p-6"
     >
       <h2 className="text-lg font-semibold text-foreground">
         {mode === 'tambah' ? 'Add medication' : 'Edit medication'}

@@ -14,7 +14,7 @@ export function BrandLogo({ ukuran = 36, className = '', prioritas = false }: Pr
       alt=""
       width={ukuran}
       height={ukuran}
-      className={`rounded-xl object-contain ${className}`.trim()}
+      className={`rounded-lg object-contain ${className}`.trim()}
       priority={prioritas}
       aria-hidden
     />

@@ -121,7 +121,7 @@ export function PanelChatAi() {
   }
 
   return (
-    <div className="rounded-2xl border border-border bg-card p-5 shadow-soft">
+    <div className="card-surface p-5">
       <form onSubmit={kirim_pertanyaan} className="space-y-3">
         <label htmlFor="kolom-pertanyaan" className="text-sm font-medium text-foreground">
           Ask about medication safety

@@ -17,10 +17,16 @@ type AlertRingkas = {
   created_at: string;
 };
 
-const WARNA_SEVERITY: Record<string, string> = {
-  critical: 'bg-red-100 text-red-800',
-  warning:  'bg-amber-100 text-amber-900',
-  info:     'bg-sky-100 text-sky-900',
+const BORDER_SEVERITY: Record<string, string> = {
+  critical: 'border-l-red-500',
+  warning: 'border-l-amber-500',
+  info: 'border-l-sky-500',
+};
+
+const LABEL_SEVERITY: Record<string, string> = {
+  critical: 'text-red-700',
+  warning: 'text-amber-800',
+  info: 'text-sky-800',
 };
 
 function format_tanggal(iso: string) {
@@ -171,8 +177,8 @@ export function DaftarAlertRingkas({
                 onClick={() => set_filter(tab.id)}
                 className={`flex shrink-0 items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-colors ${
                   filter === tab.id
-                    ? 'bg-accent text-white'
-                    : 'bg-slate-100 text-muted hover:bg-slate-200 hover:text-foreground'
+                    ? 'bg-foreground text-white'
+                    : 'bg-stone-100 text-muted hover:bg-stone-200 hover:text-foreground'
                 }`}
               >
                 {tab.label}
@@ -187,14 +193,17 @@ export function DaftarAlertRingkas({
 
           <ul className="mt-4 space-y-4">
             {alert_terfilter.length === 0 ? (
-              <li className="rounded-2xl border border-dashed border-border bg-card/50 px-6 py-10 text-center">
+              <li className="card-surface border border-dashed border-teal-200/80 px-6 py-10 text-center">
                 <p className="text-sm text-muted">No {filter} alerts.</p>
               </li>
             ) : alert_terfilter.map((alert) => (
-            <li key={alert.id} className="rounded-2xl border border-border bg-card p-5 shadow-soft">
+            <li
+              key={alert.id}
+              className={`card-surface border-l-[3px] p-5 ${BORDER_SEVERITY[alert.severity] ?? 'border-l-stone-300'}`}
+            >
               <div className="flex flex-wrap items-center gap-2">
                 <span
-                  className={`rounded-lg px-2.5 py-0.5 text-xs font-semibold uppercase tracking-wide ${WARNA_SEVERITY[alert.severity] ?? 'bg-slate-100 text-slate-800'}`}
+                  className={`text-xs font-semibold uppercase tracking-wide ${LABEL_SEVERITY[alert.severity] ?? 'text-stone-600'}`}
                 >
                   {alert.severity}
                 </span>
@@ -216,7 +225,7 @@ export function DaftarAlertRingkas({
               <div className="mt-4 flex flex-wrap gap-2">
                 <Link
                   href={`/dashboard/alerts/${alert.id}`}
-                  className="rounded-lg border border-border px-3 py-1.5 text-sm font-medium text-foreground hover:bg-slate-50"
+                  className="btn-secondary !px-3 !py-1.5 text-sm"
                 >
                   View details
                 </Link>
@@ -225,7 +234,7 @@ export function DaftarAlertRingkas({
                     type="button"
                     onClick={() => void tandai_baca(alert.id)}
                     disabled={sedang_tandai === alert.id}
-                    className="rounded-lg bg-accent px-3 py-1.5 text-sm font-semibold text-white disabled:cursor-wait disabled:opacity-70"
+                    className="btn-primary !px-3 !py-1.5 text-sm disabled:cursor-wait disabled:opacity-70"
                   >
                     {sedang_tandai === alert.id ? 'Updating…' : 'Mark as read'}
                   </button>

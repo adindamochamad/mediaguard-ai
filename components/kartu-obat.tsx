@@ -16,7 +16,7 @@ export function KartuObat({ obat, sedang_mengubah, on_ubah, on_hapus }: PropsKar
       : obat.brand_name;
 
   return (
-    <article className="rounded-2xl border border-border bg-card p-5 shadow-soft">
+    <article className="card-surface p-5">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div className="min-w-0 flex-1">
           <h3 className="text-base font-semibold text-foreground">{label_tampilan}</h3>

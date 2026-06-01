@@ -27,7 +27,7 @@ export function GrafikSeverityAlert({ alerts }: { alerts: AlertRingkas[] }) {
   if (alerts.length === 0) return null;
 
   return (
-    <div className="rounded-2xl border border-border bg-card p-5 shadow-soft">
+    <div className="card-surface p-5">
       <div className="flex items-center justify-between">
         <h2 className="text-sm font-semibold text-foreground">Alert Breakdown</h2>
         <span className="text-xs text-muted">{alerts.length} total</span>

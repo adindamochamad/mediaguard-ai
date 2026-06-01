@@ -25,30 +25,30 @@ export function LayoutSidebarDashboard({ email_pengguna, jumlah_belum_dibaca = 0
 
   return (
     <div className="flex min-h-screen">
-      <aside className="hidden w-64 shrink-0 flex-col border-r border-border bg-card md:flex md:sticky md:top-0 md:h-screen md:overflow-y-auto">
+      <aside className="header-kaca hidden w-60 shrink-0 flex-col md:flex md:sticky md:top-0 md:h-screen">
         <div className="flex h-16 items-center gap-2.5 border-b border-border px-5">
-          <BrandLogo ukuran={32} />
-          <span className="text-base font-semibold tracking-tight text-foreground">MediGuard</span>
+          <BrandLogo ukuran={30} />
+          <span className="text-base font-semibold text-foreground">MediGuard</span>
         </div>
 
-        <nav className="flex-1 space-y-1 px-3 py-4" aria-label="Dashboard">
+        <nav className="flex-1 space-y-0.5 px-3 py-4" aria-label="Dashboard">
           {daftar_nav_dashboard.map((item) => {
             const aktif = nav_aktif(pathname, item.jalur);
             return (
               <Link
                 key={item.jalur}
                 href={item.jalur}
-                className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors ${
+                className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
                   aktif
-                    ? 'bg-accent-soft text-accent'
-                    : 'text-muted hover:bg-slate-50 hover:text-foreground'
+                    ? 'border-l-2 border-accent bg-accent-soft/60 pl-[10px] text-accent'
+                    : 'border-l-2 border-transparent text-muted hover:bg-stone-50 hover:text-foreground'
                 }`}
                 aria-current={aktif ? 'page' : undefined}
               >
                 <IkonNav jenis={item.ikon} />
                 <span className="flex-1">{item.nama}</span>
                 {item.jalur === '/dashboard' && jumlah_belum_dibaca > 0 ? (
-                  <span className="rounded-full bg-red-500 px-1.5 py-0.5 text-[10px] font-bold leading-none text-white">
+                  <span className="rounded-full bg-red-600 px-1.5 py-0.5 text-[10px] font-bold leading-none text-white">
                     {jumlah_belum_dibaca > 99 ? '99+' : jumlah_belum_dibaca}
                   </span>
                 ) : null}
@@ -68,7 +68,7 @@ export function LayoutSidebarDashboard({ email_pengguna, jumlah_belum_dibaca = 0
       </aside>
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="flex h-16 items-center justify-between border-b border-border bg-card/80 px-4 backdrop-blur-md md:hidden">
+        <header className="header-kaca flex h-14 items-center justify-between px-4 md:hidden">
           <Link href="/dashboard" className="flex items-center gap-2">
             <BrandLogo ukuran={28} />
             <span className="font-semibold text-foreground">MediGuard</span>
@@ -77,7 +77,7 @@ export function LayoutSidebarDashboard({ email_pengguna, jumlah_belum_dibaca = 0
         </header>
 
         <nav
-          className="flex gap-1 overflow-x-auto border-b border-border bg-card px-2 py-2 md:hidden"
+          className="header-kaca flex gap-1 overflow-x-auto px-2 py-2 md:hidden"
           aria-label="Dashboard mobile"
         >
           {daftar_nav_dashboard.map((item) => {
@@ -97,14 +97,11 @@ export function LayoutSidebarDashboard({ email_pengguna, jumlah_belum_dibaca = 0
           })}
         </nav>
 
-        <div className="border-b border-amber-200 bg-amber-50 px-4 py-2 text-center text-xs text-amber-700">
-          For informational purposes only — not medical advice. Always consult your healthcare provider or pharmacist.
+        <div className="border-b border-teal-200/60 bg-teal-50/70 px-4 py-2 text-center text-xs text-teal-900/80 backdrop-blur-sm">
+          For informational purposes only — not medical advice.
         </div>
 
-        <main className="relative flex-1 px-4 py-6 sm:px-6 lg:px-8">
-          <div className="pointer-events-none absolute inset-0 bg-dot-grid opacity-[0.035]" />
-          <div className="relative">{children}</div>
-        </main>
+        <main className="flex-1 px-4 py-6 sm:px-6 lg:px-8">{children}</main>
       </div>
     </div>
   );

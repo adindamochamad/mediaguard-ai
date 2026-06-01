@@ -11,7 +11,7 @@ export default function LoadingDashboard() {
 
       <div className="mt-8 space-y-4">
         {[1, 2, 3].map((i) => (
-          <div key={i} className="rounded-2xl border border-border bg-card p-5">
+          <div key={i} className="card-surface animate-pulse p-5">
             <div className="flex gap-2">
               <div className="h-5 w-16 rounded-lg bg-slate-200" />
               <div className="h-5 w-20 rounded-lg bg-slate-100" />

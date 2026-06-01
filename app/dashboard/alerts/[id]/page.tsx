@@ -85,7 +85,7 @@ export default async function HalamanDetailAlert({
       </Link>
 
       {/* Header */}
-      <div className="rounded-2xl border border-border bg-card p-6 shadow-soft">
+      <div className="card-surface p-6">
         <div className="flex flex-wrap items-center gap-2">
           <span
             className={`rounded-lg px-2.5 py-0.5 text-xs font-semibold uppercase tracking-wide ${WARNA_SEVERITY[alert.severity] ?? 'bg-slate-100 text-slate-800'}`}
@@ -123,7 +123,7 @@ export default async function HalamanDetailAlert({
       </div>
 
       {/* Severity rationale */}
-      <div className="rounded-2xl border border-border bg-card p-6 shadow-soft">
+      <div className="card-surface p-6">
         <p className="text-xs font-semibold uppercase tracking-wide text-muted">
           Why this severity?
         </p>
@@ -133,7 +133,7 @@ export default async function HalamanDetailAlert({
       </div>
 
       {/* Action items */}
-      <div className="rounded-2xl border border-border bg-card p-6 shadow-soft">
+      <div className="card-surface p-6">
         <p className="text-xs font-semibold uppercase tracking-wide text-muted">
           Recommended actions
         </p>
@@ -152,7 +152,7 @@ export default async function HalamanDetailAlert({
         <TombolTandaiBaca alert_id={alert.id} sudah_dibaca={!!alert.read_at} />
         <Link
           href="/dashboard/chat"
-          className="rounded-xl border border-border px-5 py-2.5 text-sm font-medium text-foreground transition hover:bg-slate-50"
+          className="btn-secondary"
         >
           Ask AI about this →
         </Link>

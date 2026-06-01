@@ -4,7 +4,7 @@ import { JALUR_BRAND } from '@/lib/jalur-brand';
 
 export function PanelKosongPeringatan() {
   return (
-    <div className="flex flex-col items-center rounded-2xl border border-border bg-card px-6 py-12 text-center shadow-soft sm:py-16">
+    <div className="card-surface flex flex-col items-center px-6 py-12 text-center sm:py-16">
       <div className="relative mb-6 h-40 w-full max-w-xs overflow-hidden rounded-xl">
         <Image
           src={JALUR_BRAND.emptyState}

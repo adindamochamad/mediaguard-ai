@@ -124,7 +124,7 @@ export function KontrolScanDashboard({
         type="button"
         onClick={jalankan_scan}
         disabled={sedang_memindai}
-        className="inline-flex items-center gap-2 rounded-xl bg-accent px-5 py-2.5 text-sm font-semibold text-white transition hover:opacity-90 disabled:cursor-wait disabled:opacity-70"
+        className="btn-primary gap-2 disabled:cursor-wait"
       >
         {sedang_memindai ? (
           <>

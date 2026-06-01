@@ -20,7 +20,7 @@ export function PanelRiwayatScan({ riwayat }: { riwayat: LogScan[] }) {
   if (riwayat.length === 0) return null;
 
   return (
-    <div className="rounded-2xl border border-border bg-card p-5 shadow-soft">
+    <div className="card-surface p-5">
       <h2 className="text-sm font-semibold text-foreground">Scan History</h2>
 
       <div className="mt-4 overflow-x-auto">
