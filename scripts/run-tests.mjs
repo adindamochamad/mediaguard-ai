@@ -26,7 +26,13 @@ if (hasil_dedup.status !== 0) {
   process.exit(hasil_dedup.status ?? 1);
 }
 
-console.log('[run-tests] Parser Nimble + validasi alert + deduplikasi lulus.');
+const skrip_resiliensi = path.join(__dirname, 'test-scan-resiliensi-timeout.mjs');
+const hasil_resiliensi = spawnSync(process.execPath, [skrip_resiliensi], { stdio: 'inherit' });
+if (hasil_resiliensi.status !== 0) {
+  process.exit(hasil_resiliensi.status ?? 1);
+}
+
+console.log('[run-tests] Parser Nimble + validasi alert + deduplikasi + resiliensi scan lulus.');
 console.log(
   '[run-tests] Gunakan Agen Pengujian di AGENTS.md untuk tes perilaku end-to-end.',
 );

@@ -13,7 +13,7 @@
 
 *Not a diagnosis tool. A patient-facing safety layer between public Food and Drug Administration (FDA) data and the people who need it.*
 
-[Problem](#-the-problem) · [Solution](#-the-solution) · [How it works](#-how-it-works) · [Features](#-features) · [Tech stack](#-tech-stack) · [Quick start](#-quick-start)
+[Problem](#-the-problem) · [Solution](#-the-solution) · [Screenshots](#-screenshots) · [Architecture](#-architecture) · [How it works](#-how-it-works-deep-dive-for-judges) · [Features](#-features) · [Quick start](#-quick-start) · [Demo](#-demo-script-60-seconds)
 
 </div>
 
@@ -44,22 +44,239 @@ MediGuard AI is a personal medication safety intelligence agent. Add your medica
 
 ---
 
-## How it works
+## Screenshots
 
-```
-Nimble crawls FDA.gov (Food and Drug Administration) / PubMed / medical news
-         ↓
-Claude matches findings to your medication list
-    → scores severity (0–1 confidence)
-    → suppresses alerts below 0.75 threshold
-    → deduplicates across sources
-         ↓
-Supabase stores alerts + fires Realtime event
-         ↓
-Dashboard updates live  +  Critical alert → email (Resend)
+Product flow in five screens (plus email + caregiver). Full-resolution files: [`public/screenshots/`](public/screenshots/).
+
+### Landing & onboarding
+
+<p align="center">
+  <img src="public/screenshots/01-landing.png" alt="MediGuard AI landing page" width="720" />
+</p>
+
+*Hero, value proposition, and entry to sign up — consumer health-tech tone, not clinical alarmism.*
+
+### Medication profile
+
+<p align="center">
+  <img src="public/screenshots/02-medications.png" alt="Medication list CRUD" width="720" />
+</p>
+
+*Users add brand name, generic, dosage, and notes. Free-text names are allowed (no proprietary drug DB required).*
+
+### Alerts dashboard (Scan Now + Realtime)
+
+<p align="center">
+  <img src="public/screenshots/03-alerts-dashboard.png" alt="Alerts dashboard with severity filters and scan" width="720" />
+</p>
+
+*Severity-coded cards, KPI row, filter tabs, and **Scan Now** — new alerts can appear live via Supabase Realtime.*
+
+### Alert detail & source traceability
+
+<p align="center">
+  <img src="public/screenshots/04-alert-detail.png" alt="Alert detail with FDA source link" width="720" />
+</p>
+
+*Every meaningful alert ties back to a primary URL (FDA, PubMed, etc.) — the architectural requirement for trustworthy consumer safety.*
+
+### AI Chat (Nimble + Claude SSE)
+
+<p align="center">
+  <img src="public/screenshots/05-ai-chat.png" alt="AI chat with streamed answer and Nimble sources" width="720" />
+</p>
+
+*Streaming answers with a **Nimble sources fetched** panel — judges can verify live web intel, not a static FAQ.*
+
+### Critical email & caregiver (optional MVP paths)
+
+<table>
+<tr>
+<td width="50%" align="center">
+<strong>Critical alert email</strong><br/><br/>
+<img src="public/screenshots/06-email-alert.png" alt="Resend critical alert email" width="400" />
+</td>
+<td width="50%" align="center">
+<strong>Caregiver read-only view</strong><br/><br/>
+<img src="public/screenshots/07-caregiver-view.png" alt="Caregiver magic link view" width="400" />
+</td>
+</tr>
+</table>
+
+---
+
+## Architecture
+
+High-level system: Next.js app + API routes, Supabase for auth/data/realtime, Nimble for live crawl/search, Claude for relevance and plain-language summaries, Resend for critical email.
+
+```mermaid
+flowchart TB
+  subgraph clients["User interfaces"]
+    WEB["Next.js web app"]
+    EMAIL["Resend email"]
+    CG["Caregiver magic link"]
+  end
+
+  subgraph api["Next.js API layer"]
+    MEDS["/api/medications"]
+    SCAN["/api/scan"]
+    ALERTS["/api/alerts"]
+    CHAT["/api/chat SSE"]
+    CRON["/api/webhooks/cron"]
+  end
+
+  subgraph data["Supabase"]
+    PG["PostgreSQL + RLS"]
+    AUTH["Auth JWT"]
+    RT["Realtime INSERT alerts"]
+  end
+
+  subgraph pipeline["AI pipeline (server-only)"]
+    NIM["Nimble Extract / Search / Crawl"]
+    CLA["Claude Sonnet analysis"]
+    DED["URL deduplication"]
+  end
+
+  WEB --> MEDS & SCAN & ALERTS & CHAT
+  CG --> ALERTS
+  SCAN --> NIM --> CLA --> DED --> PG
+  CRON --> SCAN
+  DED --> RT
+  RT --> WEB
+  DED --> EMAIL
+  MEDS & ALERTS --> PG
+  CHAT --> NIM
+  CHAT --> CLA
+  AUTH --> PG
 ```
 
-Scans run on-demand (Scan Now) and automatically every 6 hours via cron.
+### Alert pipeline (sequence)
+
+```mermaid
+sequenceDiagram
+  participant U as User / Cron
+  participant API as POST /api/scan
+  participant N as Nimble
+  participant C as Claude
+  participant DB as Supabase
+  participant R as Realtime + Resend
+
+  U->>API: Trigger scan
+  API->>DB: Load medications (RLS)
+  par Crawl phase
+    API->>N: FDA safety page (20s timeout)
+    API->>N: Per-drug news + PubMed
+  end
+  Note over N: FDA RSS fallback if extract fails
+  API->>C: Crawl text + drug list
+  C-->>API: JSON alerts + confidence
+  API->>API: Filter confidence ≥ 0.75
+  API->>API: Dedup by normalized source_url
+  API->>DB: INSERT new alerts + scan_logs
+  DB-->>R: Realtime push + critical email
+```
+
+### Repository map (where judges should look)
+
+| Path | Role |
+|------|------|
+| `lib/scan/jalankan-scan-untuk-pengguna.ts` | End-to-end scan: Nimble → Claude → dedup → DB |
+| `lib/nimble.ts` | FDA crawl + RSS fallback, news search, PubMed |
+| `lib/claude/analyze-for-alerts.ts` | Structured alert JSON from crawl |
+| `lib/scan/deduplikasi-alert.ts` | Same URL → no spam |
+| `app/api/chat/route.ts` | SSE chat + Nimble source prefetch |
+| `app/api/webhooks/cron/route.ts` | Batch scan every 6h (`Bearer CRON_SECRET`) |
+| `supabase/migrations/001_schema_rls.sql` | Tables + row-level security |
+
+Extended architecture notes (data models, chat flow, security table): [`ARCHITECTURE.md`](ARCHITECTURE.md).
+
+---
+
+## How it works (deep dive for judges)
+
+This section is the technical narrative behind the demo — what runs, what fails gracefully, and why the design is defensible for a **Nimble + Claude** hackathon entry.
+
+### 1. Triggers — when does a scan run?
+
+| Trigger | Entry point | Auth |
+|---------|-------------|------|
+| **Scan Now** | `POST /api/scan` | Supabase session cookie |
+| **Cron (every 6h)** | `GET /api/webhooks/cron` | `Authorization: Bearer $CRON_SECRET` |
+| **Demo fallback** | Same `POST /api/scan` when `DEMO_FALLBACK=true` | Inserts cached alerts — no Nimble/Claude |
+
+Cron loads every `user_id` that has at least one row in `medications`, then runs the same pipeline as manual scan per user (service role client).
+
+### 2. Nimble crawl phase — live web, not a static DB
+
+For each scan, the server (`lib/scan/jalankan-scan-untuk-pengguna.ts`):
+
+1. Loads the user’s medications from Supabase (max **9** drugs per crawl batch).
+2. Calls **Nimble** in parallel with a **20s timeout** per request:
+   - `crawlFDAAlerts()` — FDA Drug Safety Communications page
+   - Per medication: `searchMedicalNews()` + `crawlPubMed()`
+3. **Failure handling:** If FDA extract times out or errors, that branch is skipped; if the HTML parse is empty, **`crawlFDAAlerts` falls back to the public FDA RSS feed** (`lib/nimble.ts`). Per-drug timeouts are swallowed so other drugs still contribute content.
+4. Merges all text into one crawl bundle via `siapkan_konten_crawl_untuk_analisis()` for Claude.
+
+If **no** crawl text remains after fallbacks, the API returns **502** with a clear message (`Tidak ada konten crawl…`) — no silent empty success.
+
+### 3. Claude analysis — relevance, severity, confidence
+
+- Model: **Claude Sonnet** (`lib/claude/konstanta.ts`).
+- Prompt instructs: match only the patient’s drug list, assign `critical` / `warning` / `info`, return JSON with `confidence` 0–1.
+- Server-side filter (`lib/validasi-alert.ts`): drops alerts with `confidence < 0.75` (`ambang_keyakinan_minimum` in `lib/konstanta.ts`), non-relevant drugs, or invalid schema (Zod).
+
+This is the **signal-over-noise** product decision: better to show nothing than a wrong alarm.
+
+### 4. Deduplication — no duplicate URLs
+
+Before insert, each candidate alert is checked against existing rows for that user (`lib/scan/deduplikasi-alert.ts`):
+
+- Normalize `source_url` (trim, lowercase host/path rules).
+- Skip if the same user + medication + URL already exists.
+- Second **Scan Now** increments `jumlah_alert_duplikat` in the JSON response instead of flooding the UI.
+
+### 5. Persistence & delivery
+
+| Step | What happens |
+|------|----------------|
+| Insert | `alerts` row: title, summary, severity, `source_url`, `ai_confidence`, `medication_id` |
+| Log | `scan_logs`: `sources_crawled`, `alerts_generated`, `duration_ms` |
+| Realtime | Supabase publication on `alerts` → dashboard updates without full page reload |
+| Email | If `severity === 'critical'`, Resend sends `CriticalAlertEmail` (Hari 9) |
+
+### 6. AI Chat — separate path, same Nimble truth
+
+`POST /api/chat` is **not** the scan pipeline:
+
+1. Loads the user’s medication names from DB.
+2. Prefetches Nimble sources (FDA slice + per-drug medical search) server-side.
+3. Builds a single prompt with **“Live source shortlist from Nimble”** and streams tokens via **SSE** (`text/event-stream`).
+4. First SSE event includes `meta.sumber[]` for the UI “Nimble sources fetched” panel.
+
+Policy baked into the prompt: no diagnosis, no direct start/stop medication orders — consult clinician.
+
+### 7. Security & privacy (demo scope)
+
+| Concern | Implementation |
+|---------|------------------|
+| Data isolation | Supabase **RLS** — users only read/write their rows |
+| API secrets | Nimble, Anthropic, Resend, `SERVICE_ROLE` — **server only**, never `NEXT_PUBLIC_*` |
+| Cron abuse | `CRON_SECRET` required on webhook |
+| PHI minimization | Email + medication names only; no diagnoses stored by design |
+
+### 8. Automated verification
+
+```bash
+npm run test          # parsers, Zod alerts, dedup, timeout resiliensi
+npm run test:polish   # E2E: signup → meds → scan → alerts → complex chat (needs dev on :3001)
+curl http://localhost:3001/sitemap.xml
+```
+
+Manual checklist for judges reproducing in a browser: [`TESTING.md`](TESTING.md).
+
+### 9. One-line pitch for the pipeline
+
+> **Nimble** brings fresh FDA/PubMed/news text off the live web → **Claude** decides what matters for *your* pill list → **Supabase** stores, dedupes, and pushes only those rows to you (and email if critical).
 
 ---
 
@@ -77,6 +294,7 @@ Scans run on-demand (Scan Now) and automatically every 6 hours via cron.
 | **Caregiver sharing** | Invite a family member or doctor — they get a read-only magic link, no account needed |
 | **Onboarding flow** | Step-by-step guidance for first-time users |
 | **Scan fallback** | `DEMO_FALLBACK=true` bypasses Nimble for zero-risk live demos |
+| **Sitemap** | `/sitemap.xml` for landing, login, signup (`app/sitemap.ts`) |
 
 ---
 
@@ -91,6 +309,7 @@ Scans run on-demand (Scan Now) and automatically every 6 hours via cron.
 | AI | **Anthropic Claude Sonnet** (prompt caching, tool use, SSE streaming) |
 | Email | Resend + React Email |
 | Hosting | VPS (PM2 + Nginx) or Vercel |
+| Demo video | Remotion (`video/`) |
 
 ---
 
@@ -98,7 +317,7 @@ Scans run on-demand (Scan Now) and automatically every 6 hours via cron.
 
 ### Prerequisites
 
-- Node.js 18+
+- Node.js 20+
 - Supabase project ([free tier](https://supabase.com))
 - Nimble API key ([nimbleway.com](https://www.nimbleway.com))
 - Anthropic API key ([console.anthropic.com](https://console.anthropic.com))
@@ -161,20 +380,22 @@ crontab -e
 # add: 0 */6 * * * curl -s -H "Authorization: Bearer YOUR_CRON_SECRET" https://yourdomain.com/api/webhooks/cron
 ```
 
-Configure Nginx to proxy port 3001 and terminate SSL (Let's Encrypt recommended).
+Configure Nginx to proxy port 3001 and terminate SSL (Let's Encrypt recommended). For AI Chat streaming, disable proxy buffering on the chat route.
 
 ---
 
-## Demo
+## Demo script (~60 seconds)
 
-| Step | Action |
-|---|---|
-| 1 | Sign up → add medications (e.g. Metformin, Lisinopril, Warfarin) |
-| 2 | Click **Scan Now** — live Food and Drug Administration (FDA) + PubMed crawl via Nimble |
-| 3 | Alerts appear on dashboard in real time (Supabase Realtime) |
-| 4 | Click any alert → severity rationale, action items, direct Food and Drug Administration (FDA) source link |
-| 5 | Open **AI Chat** → ask a question → Claude streams an answer with citations |
-| 6 | Invite a caregiver → they receive a read-only link via email |
+| Step | Action | What to highlight |
+|------|--------|-------------------|
+| 1 | Sign up → add **Metformin** + **Lisinopril** | Personalization input |
+| 2 | **Scan Now** | Nimble + Claude pipeline (15–120s) |
+| 3 | Alert card appears | Realtime + severity badge |
+| 4 | Open alert detail | FDA / PubMed **source URL** |
+| 5 | **AI Chat** — ask about interaction or recent FDA news | SSE stream + Nimble sources panel |
+| 6 | (Optional) Caregiver invite | Magic link read-only view |
+
+Set `DEMO_FALLBACK=true` only if live APIs are unavailable on stage.
 
 ---
 

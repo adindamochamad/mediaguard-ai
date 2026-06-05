@@ -1,0 +1,15 @@
+Here is how the pipeline works.
+
+You build one medication list — secured with row-level access in Supabase.
+
+A manual Scan Now, or a scheduled job every six hours, triggers the run.
+
+Nimble crawls live web sources — branching into FDA safety communications, PubMed, and medical news.
+
+Claude reads what was crawled, matches it to your specific drugs, scores severity, and filters noise before anything reaches you.
+
+Duplicate alerts from the same source URL collapse to one notification — so repeat scans do not spam you.
+
+Results are stored in Supabase, then split three ways: a realtime push to your browser, a critical email when severity demands it, and a read-only magic link for caregivers.
+
+From trigger to dashboard, the full path runs in under sixty seconds.

@@ -1,0 +1,1 @@
+In AI Chat, ask everyday questions about your medications. Claude streams an answer while calling Nimble for live sources — not a months-old static database.

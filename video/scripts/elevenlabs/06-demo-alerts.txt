@@ -1,0 +1,1 @@
+On the alerts dashboard, new items appear live through Supabase Realtime — no page refresh. Hit Scan Now and the Nimble-to-Claude pipeline returns personalized results in under a minute.

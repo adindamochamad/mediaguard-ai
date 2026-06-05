@@ -1,0 +1,26 @@
+/** Konfigurasi durasi — maks 2 menit 55 detik (bukan pas 3 menit) */
+export const FPS_VIDEO = 30;
+export const DURASI_MAKS_DETIK = 175; // 2:55
+export const DURASI_MAKS_FRAME = FPS_VIDEO * DURASI_MAKS_DETIK; // 5250
+
+export const DURASI_SCENE_HOOK = 315;
+export const DURASI_SCENE_PROBLEM = 405;
+export const DURASI_SCENE_ALUR = 1770;
+export const DURASI_SCENE_TRANSISI = 195;
+export const DURASI_SCENE_DEMO = 330;
+export const DURASI_SCENE_DEMO_CAREGIVER = 375;
+export const DURASI_SCENE_FEATURES = 465;
+export const DURASI_SCENE_CTA = 405;
+
+export const DURASI_TOTAL_FRAME =
+  DURASI_SCENE_HOOK +
+  DURASI_SCENE_PROBLEM +
+  DURASI_SCENE_ALUR +
+  DURASI_SCENE_TRANSISI +
+  DURASI_SCENE_DEMO * 4 +
+  DURASI_SCENE_DEMO_CAREGIVER +
+  DURASI_SCENE_FEATURES +
+  DURASI_SCENE_CTA;
+
+/** Harus ≤ DURASI_MAKS_FRAME */
+export const DURASI_TOTAL_DETIK = DURASI_TOTAL_FRAME / FPS_VIDEO;

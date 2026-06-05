@@ -1,0 +1,3 @@
+FDA MedWatch sends the same generic blast to everyone. MediGuard sends only alerts tied to your list — confidence-scored, deduplicated, and linked to primary sources.
+
+Nimble powers live web intelligence. Claude powers relevance. Supabase Realtime is what makes the demo feel instant in the browser.

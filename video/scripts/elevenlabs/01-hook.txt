@@ -1,0 +1,3 @@
+MediGuard AI is your personal medication safety intelligence agent.
+
+Add your medications once. We monitor FDA alerts, PubMed, and medical news — and only surface what matters to you, with links to primary sources.

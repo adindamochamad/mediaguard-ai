@@ -11,7 +11,10 @@
     "verify": "node scripts/verify-project.mjs && node scripts/verify-teks-medis.mjs",
     "test": "node scripts/run-tests.mjs",
     "agents": "node scripts/run-agents.mjs",
-    "setup:git-hooks": "node scripts/setup-git-hooks.mjs"
+    "test:polish": "node --env-file=.env.local scripts/uji-polish-day1-2.mjs",
+    "setup:git-hooks": "node scripts/setup-git-hooks.mjs",
+    "video:dev": "npm run dev --prefix video",
+    "video:render": "npm run render --prefix video"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.99.0",

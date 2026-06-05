@@ -1,0 +1,7 @@
+MediGuard AI — real-time medication safety intelligence for patients and the people who care for them.
+
+Visit mediguard dot adindamochamad dot com.
+
+Built for DeveloperWeek NYC — Nimble Challenge.
+
+Informational only. Not medical advice. Always talk with your doctor or pharmacist before changing treatment.

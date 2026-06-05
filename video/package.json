@@ -4,7 +4,8 @@
   "description": "MediGuard AI — Hackathon Demo Video",
   "scripts": {
     "dev": "npx remotion studio",
-    "render": "npx remotion render src/index.ts MediGuardVideo out/mediaguard-demo.mp4 --gl=angle"
+    "render": "npx remotion render src/index.ts MediGuardVideo out/mediaguard-demo.mp4 --gl=angle",
+    "render:hq": "npx remotion render src/index.ts MediGuardVideo out/mediaguard-demo.mp4 --gl=angle --codec=h264 --crf=18"
   },
   "dependencies": {
     "@remotion/cli": "4.0.290",
