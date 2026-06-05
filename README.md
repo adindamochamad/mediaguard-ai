@@ -13,7 +13,7 @@
 
 *Not a diagnosis tool. A patient-facing safety layer between public Food and Drug Administration (FDA) data and the people who need it.*
 
-[Problem](#-the-problem) · [Solution](#-the-solution) · [Screenshots](#-screenshots) · [Architecture](#-architecture) · [How it works](#-how-it-works-deep-dive-for-judges) · [Features](#-features) · [Quick start](#-quick-start) · [Demo](#-demo-script-60-seconds) · [Limitations](#-known-limitations)
+[Problem](#-the-problem) · [Solution](#-the-solution) · [Screenshots](#-screenshots) · [Architecture](#-architecture) · [How it works](#-how-it-works-deep-dive-for-judges) · [Features](#-features) · [Quick start](#-quick-start) · [Demo](#-demo-script-60-seconds) · [Security](#-security--reliability) · [Limitations](#-known-limitations)
 
 </div>
 
@@ -186,6 +186,9 @@ sequenceDiagram
 | `lib/scan/deduplikasi-alert.ts` | Same URL → no spam |
 | `app/api/chat/route.ts` | SSE chat + Nimble source prefetch |
 | `app/api/webhooks/cron/route.ts` | Batch scan every 6h (`Bearer CRON_SECRET`) |
+| `lib/rate-limit.ts` | Scan Now rate limit (5/hour via `scan_logs`) |
+| `lib/scan/dengan-batas-waktu-scan.ts` | 120s API timeout — returns 504, UI unblocks |
+| `components/batas-galat.tsx` | Per-section error boundaries on dashboard |
 | `supabase/migrations/001_schema_rls.sql` | Tables + row-level security |
 
 Extended architecture notes (data models, chat flow, security table): [`ARCHITECTURE.md`](ARCHITECTURE.md).
@@ -202,7 +205,7 @@ This section is the technical narrative behind the demo — what runs, what fail
 |---------|-------------|------|
 | **Scan Now** | `POST /api/scan` | Supabase session cookie |
 | **Cron (every 6h)** | `GET /api/webhooks/cron` | `Authorization: Bearer $CRON_SECRET` |
-| **Demo fallback** | Same `POST /api/scan` when `DEMO_FALLBACK=true` | Inserts cached alerts — no Nimble/Claude |
+| **Demo fallback** | Same `POST /api/scan` when `DEMO_FALLBACK=true` | Cached alerts — see [Demo in 2 minutes](#demo-in-2-minutes-judges) |
 
 Cron loads every `user_id` that has at least one row in `medications`, then runs the same pipeline as manual scan per user (service role client).
 
@@ -315,6 +318,40 @@ Manual checklist for judges reproducing in a browser: [`TESTING.md`](TESTING.md)
 
 ## Quick start
 
+### Demo in 2 minutes (judges)
+
+Need a working demo **before** reading the full pipeline? Enable fallback mode — realistic FDA-style alerts in ~1 second, no Nimble or Claude required:
+
+```bash
+git clone https://github.com/adindamochamad/mediaguard-ai.git
+cd mediaguard-ai
+npm install
+cp .env.example .env.local
+```
+
+In `.env.local`, set at minimum your Supabase keys, then:
+
+```
+DEMO_FALLBACK=true
+```
+
+```bash
+npm run dev
+# → http://localhost:3001
+```
+
+| Step | Action |
+|------|--------|
+| 1 | Sign up → add **Metformin** + **Lisinopril** |
+| 2 | Click **Scan Now** — cached alerts insert instantly; Supabase Realtime still updates the feed |
+| 3 | Open any alert → primary **source URL** (real FDA recall copy in fallback data) |
+
+**Production / Nimble Challenge:** set `DEMO_FALLBACK=false`, fill all API keys, run health checks, then use the [60-second demo script](#demo-script-60-seconds). Fallback writes `scan_logs` and respects deduplication — safe to click Scan Now multiple times on stage.
+
+Implementation: `lib/scan/demo-fallback.ts` · toggled in `app/api/scan/route.ts`.
+
+---
+
 ### Prerequisites
 
 - Node.js 20+
@@ -343,11 +380,9 @@ SUPABASE_SERVICE_ROLE_KEY=
 RESEND_API_KEY=
 NEXT_PUBLIC_APP_URL=http://localhost:3001
 CRON_SECRET=your-random-secret
-# Live demo on stage — set true to skip Nimble/Claude (cached alerts, ~1s Scan Now)
+# false = live Nimble → Claude pipeline · true = instant demo (see "Demo in 2 minutes" above)
 DEMO_FALLBACK=false
 ```
-
-**Live demo tip:** If Nimble or Claude is slow or rate-limited during judging, set `DEMO_FALLBACK=true` in `.env.local` and restart `npm run dev`. Scan Now uses pre-built alerts from `lib/scan/demo-fallback.ts` (Supabase Realtime still fires). Use `DEMO_FALLBACK=false` when showing the full Nimble → Claude pipeline.
 
 Run the database migrations in your Supabase SQL Editor:
 
@@ -393,7 +428,7 @@ Configure Nginx to proxy port 3001 and terminate SSL (Let's Encrypt recommended)
 
 | Step | Action | What to highlight |
 |------|--------|-------------------|
-| 0 | Set `DEMO_FALLBACK=true` in `.env.local` if APIs are slow | Instant Scan Now (~1s), writes `scan_logs`, dedupes repeat demos — say “production uses live crawl” |
+| 0 | [Demo in 2 minutes](#demo-in-2-minutes-judges): `DEMO_FALLBACK=true` if APIs are slow | Instant Scan Now (~1s), writes `scan_logs`, dedupes repeat demos — say “production uses live crawl” |
 | 1 | Sign up → add **Metformin** + **Lisinopril** | Personalization input |
 | 2 | **Scan Now** | With fallback: cached alerts + Realtime; live: Nimble + Claude (15–120s) |
 | 3 | Alert card appears | Realtime + severity badge |
@@ -403,6 +438,57 @@ Configure Nginx to proxy port 3001 and terminate SSL (Let's Encrypt recommended)
 | 7 | **Scan history** (`/dashboard/history`) | Past scans: time, sources, alerts found, duration |
 
 **When to use fallback:** stage Wi‑Fi, cold APIs, or scan timeouts over 2 minutes. **When to use live:** Nimble Challenge judging — run health checks first, then set `DEMO_FALLBACK=false`.
+
+---
+
+## Security & reliability
+
+Production-hardening added for demo reliability and judge review — each concern maps to a concrete file.
+
+### Scan rate limiting — `lib/rate-limit.ts`
+
+| Detail | Value |
+|--------|-------|
+| Scope | Manual **Scan Now** only (`POST /api/scan`) |
+| Limit | **5 scans per user per 60 minutes** (`MAKS_SCAN_MANUAL_PER_JAM`, `JENDELA_BATAS_SCAN_MENIT` in `lib/konstanta.ts`) |
+| Storage | Counts rows in `scan_logs` where `scan_type = 'manual'` — no extra table |
+| Response | HTTP **429** with `retryAfter` minutes when exceeded |
+| Fail-open | If `scan_logs` query fails, scan is allowed (logged server-side) so a DB blip does not brick the demo |
+
+Used in `app/api/scan/route.ts` via `checkRateLimit()` before the pipeline runs.
+
+### Scan API timeout — `lib/scan/dengan-batas-waktu-scan.ts`
+
+| Detail | Value |
+|--------|-------|
+| Cap | **120 seconds** (`BATAS_WAKTU_SCAN_MANUAL_MS`) |
+| Mechanism | `Promise.race` on the full `jalankan_scan_untuk_pengguna()` promise |
+| Client response | HTTP **504** + `GalatBatasWaktuScan` message — dashboard toast and progress bar reset |
+| UI sync | `KontrolScanDashboard` uses `AbortSignal.timeout(130s)` so the browser does not hang |
+
+**Note:** The server pipeline may still finish in the background after a 504; check `scan_logs` and PM2 `[SCAN]` logs. Avoid rapid re-clicks after a timeout.
+
+Per-source Nimble calls inside the pipeline also use a **20s** timeout (`jalankan-scan-untuk-pengguna.ts`) with retry via `lib/nimble/dengan-retry.ts`.
+
+### Dashboard error boundaries — `components/error-boundary.tsx`
+
+Re-exports `BatasGalat` from `components/batas-galat.tsx` (canonical implementation). The dashboard wraps independent UI sections so one failure does not white-screen the page:
+
+| Wrapper | Protects |
+|---------|----------|
+| `BungkusBatasGalat` | Scan control, KPI row, chart, alert list, scan history panel |
+| `WadahDashboardAman` | Client-side dashboard shell |
+| `PenampilGangguanLayanan` | Supabase query errors (Nimble/Claude down messaging) |
+
+Server-side `app/dashboard/error.tsx` handles uncaught route errors; boundaries handle client render failures inside hydrated widgets.
+
+### Related constants & tests
+
+```bash
+npm run test   # includes test-batas-scan.mjs, test-scan-resiliensi-timeout.mjs, test-nimble-retry.mjs
+```
+
+See also §7 in [How it works](#7-security--privacy-demo-scope) for RLS, secret handling, and `CRON_SECRET`.
 
 ---
 
