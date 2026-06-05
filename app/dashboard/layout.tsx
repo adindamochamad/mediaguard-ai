@@ -1,5 +1,6 @@
 import { redirect } from 'next/navigation';
 import { ToastProvider } from '@/components/toast-provider';
+import { WadahDashboardAman } from '@/components/wadah-dashboard-aman';
 import { buat_klien_supabase_server } from '@/lib/supabase/server';
 import { LayoutSidebarDashboard } from '@/components/layout-sidebar-dashboard';
 
@@ -28,7 +29,7 @@ export default async function LayoutDashboard({
       email_pengguna={pengguna.email ?? ''}
       jumlah_belum_dibaca={jumlah_belum_dibaca ?? 0}
     >
-      {children}
+      <WadahDashboardAman>{children}</WadahDashboardAman>
       <ToastProvider />
     </LayoutSidebarDashboard>
   );

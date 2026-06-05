@@ -53,11 +53,25 @@ function uji_konten_kosong_gagal_scan() {
   assert.equal(harus_gagal, true, 'Konten kosong harus memicu error pipeline scan');
 }
 
+async function uji_batas_waktu_scan_api() {
+  const janji_lambat = new Promise((resolve) => setTimeout(() => resolve('ok'), 200));
+  try {
+    await Promise.race([
+      janji_lambat,
+      new Promise((_, reject) => setTimeout(() => reject(new Error('Scan timed out')), 50)),
+    ]);
+    assert.fail('Harus timeout API');
+  } catch (galat) {
+    assert.match(String(galat.message), /timed out/i);
+  }
+}
+
 async function main() {
   await uji_fda_timeout_lanjut_kosong();
   await uji_per_obat_timeout_tidak_memblokir_lain();
   uji_konten_kosong_gagal_scan();
-  console.log('[test-scan-resiliensi] Timeout Nimble + konten kosong — perilaku sesuai lib/scan lulus.');
+  await uji_batas_waktu_scan_api();
+  console.log('[test-scan-resiliensi] Timeout Nimble + konten kosong + batas API lulus.');
 }
 
 main().catch((galat) => {

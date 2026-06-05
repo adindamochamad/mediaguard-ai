@@ -19,7 +19,7 @@ export async function GET(permintaan: NextRequest) {
   const { data, error } = await supabase
     .from('alerts')
     .select(
-      'id, user_id, medication_id, severity, title, summary, source_url, source_type, ai_confidence, read_at, created_at',
+      'id, user_id, medication_id, severity, title, summary, source_url, source_type, ai_confidence, read_at, user_helpful, feedback_at, created_at',
     )
     .eq('user_id', pengguna.id)
     .order('created_at', { ascending: false })

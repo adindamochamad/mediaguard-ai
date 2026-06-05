@@ -15,3 +15,9 @@ export const BATAS_CUPLIKAN_KARAKTER = 5000;
 
 /** Maksimum item terstruktur yang diekstrak per sumber. */
 export const BATAS_ITEM_TERSTRUKTUR = 15;
+
+/** Percobaan ekstrak/pencarian Nimble sebelum fallback (gangguan jaringan singkat). */
+export const MAKS_PERCOBAAN_NIMBLE = 2;
+
+/** Jeda dasar antar percobaan ulang — dikalikan nomor percobaan (backoff linear). */
+export const JEDA_RETRY_NIMBLE_MS = 1000;

@@ -3,11 +3,15 @@
 import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'sonner';
+import { BilahProgresScan } from '@/components/bilah-progres-scan';
+import { BATAS_WAKTU_SCAN_MANUAL_MS } from '@/lib/konstanta';
+import { TAHAP_PROGRES_SCAN } from '@/lib/scan/estimasi-progres-scan';
 import { buat_klien_supabase_peramban } from '@/lib/supabase/client';
 
 type PropsKontrolScan = {
   waktu_scan_terakhir: string | null;
   pengguna_id: string;
+  jumlah_obat: number;
 };
 
 function format_waktu_relatif(iso: string): string {
@@ -24,6 +28,7 @@ function format_waktu_relatif(iso: string): string {
 export function KontrolScanDashboard({
   waktu_scan_terakhir,
   pengguna_id,
+  jumlah_obat,
 }: PropsKontrolScan) {
   const router = useRouter();
   const [waktu_terakhir_lokal, set_waktu_terakhir_lokal] = useState(waktu_scan_terakhir);
@@ -60,10 +65,13 @@ export function KontrolScanDashboard({
   const jalankan_scan = useCallback(async () => {
     set_sedang_memindai(true);
 
-    const id_toast = toast.loading('Scanning Food and Drug Administration (FDA), PubMed, and medical news…');
+    const id_toast = toast.loading(`${TAHAP_PROGRES_SCAN[0].label} This may take about a minute.`);
 
     try {
-      const respons = await fetch('/api/scan', { method: 'POST' });
+      const respons = await fetch('/api/scan', {
+        method: 'POST',
+        signal: AbortSignal.timeout(BATAS_WAKTU_SCAN_MANUAL_MS + 10_000),
+      });
       const body = (await respons.json()) as {
         kesalahan?: string;
         scan?: {
@@ -107,8 +115,12 @@ export function KontrolScanDashboard({
       } catch {
         // Sinkron tab bersifat tambahan; realtime Postgres tetap jalur utama.
       }
-    } catch {
-      toast.error('Network error during scan.', { id: id_toast });
+    } catch (galat) {
+      const pesan =
+        galat instanceof DOMException && galat.name === 'TimeoutError'
+          ? 'Scan timed out. The server may still be busy — wait a moment, then try again.'
+          : 'Network error during scan.';
+      toast.error(pesan, { id: id_toast });
     } finally {
       set_sedang_memindai(false);
     }
@@ -119,12 +131,12 @@ export function KontrolScanDashboard({
     : 'Last scanned: not yet';
 
   return (
-    <div className="flex flex-col items-start gap-2 sm:items-end">
+    <div className="flex w-full flex-col items-stretch gap-3 sm:max-w-sm sm:items-end">
       <button
         type="button"
         onClick={jalankan_scan}
         disabled={sedang_memindai}
-        className="btn-primary gap-2 disabled:cursor-wait"
+        className="btn-primary gap-2 self-start disabled:cursor-wait sm:self-end"
       >
         {sedang_memindai ? (
           <>
@@ -135,7 +147,10 @@ export function KontrolScanDashboard({
           'Scan now'
         )}
       </button>
-      <p className="text-xs text-muted">{teks_terakhir}</p>
+
+      <BilahProgresScan jumlah_obat={jumlah_obat} aktif={sedang_memindai} />
+
+      <p className="text-xs text-muted sm:text-right">{teks_terakhir}</p>
     </div>
   );
 }

@@ -1,3 +1,4 @@
+import { TombolFeedbackAlert } from '@/components/tombol-feedback-alert';
 import { TombolTandaiBaca } from '@/components/tombol-tandai-baca';
 import { buat_klien_supabase_server } from '@/lib/supabase/server';
 import Link from 'next/link';
@@ -65,7 +66,7 @@ export default async function HalamanDetailAlert({
 
   const { data: alert } = await supabase
     .from('alerts')
-    .select('id, user_id, severity, title, summary, source_url, source_type, ai_confidence, read_at, created_at')
+    .select('id, user_id, severity, title, summary, source_url, source_type, ai_confidence, read_at, user_helpful, feedback_at, created_at')
     .eq('id', params.id)
     .eq('user_id', pengguna.id)
     .maybeSingle();
@@ -145,6 +146,16 @@ export default async function HalamanDetailAlert({
             </li>
           ))}
         </ul>
+      </div>
+
+      {/* Feedback */}
+      <div className="card-surface p-6">
+        <TombolFeedbackAlert
+          alert_id={alert.id}
+          user_helpful={alert.user_helpful}
+          feedback_at={alert.feedback_at}
+          ukuran="penuh"
+        />
       </div>
 
       {/* Actions footer */}

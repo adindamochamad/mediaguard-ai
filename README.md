@@ -13,7 +13,7 @@
 
 *Not a diagnosis tool. A patient-facing safety layer between public Food and Drug Administration (FDA) data and the people who need it.*
 
-[Problem](#-the-problem) · [Solution](#-the-solution) · [Screenshots](#-screenshots) · [Architecture](#-architecture) · [How it works](#-how-it-works-deep-dive-for-judges) · [Features](#-features) · [Quick start](#-quick-start) · [Demo](#-demo-script-60-seconds)
+[Problem](#-the-problem) · [Solution](#-the-solution) · [Screenshots](#-screenshots) · [Architecture](#-architecture) · [How it works](#-how-it-works-deep-dive-for-judges) · [Features](#-features) · [Quick start](#-quick-start) · [Demo](#-demo-script-60-seconds) · [Limitations](#-known-limitations)
 
 </div>
 
@@ -343,7 +343,11 @@ SUPABASE_SERVICE_ROLE_KEY=
 RESEND_API_KEY=
 NEXT_PUBLIC_APP_URL=http://localhost:3001
 CRON_SECRET=your-random-secret
+# Live demo on stage — set true to skip Nimble/Claude (cached alerts, ~1s Scan Now)
+DEMO_FALLBACK=false
 ```
+
+**Live demo tip:** If Nimble or Claude is slow or rate-limited during judging, set `DEMO_FALLBACK=true` in `.env.local` and restart `npm run dev`. Scan Now uses pre-built alerts from `lib/scan/demo-fallback.ts` (Supabase Realtime still fires). Use `DEMO_FALLBACK=false` when showing the full Nimble → Claude pipeline.
 
 Run the database migrations in your Supabase SQL Editor:
 
@@ -351,6 +355,7 @@ Run the database migrations in your Supabase SQL Editor:
 # Run in order:
 supabase/migrations/001_schema_rls.sql
 supabase/migrations/002_realtime_alerts.sql
+supabase/migrations/003_alert_feedback.sql
 ```
 
 Start the dev server:
@@ -388,14 +393,28 @@ Configure Nginx to proxy port 3001 and terminate SSL (Let's Encrypt recommended)
 
 | Step | Action | What to highlight |
 |------|--------|-------------------|
+| 0 | Set `DEMO_FALLBACK=true` in `.env.local` if APIs are slow | Instant Scan Now (~1s), writes `scan_logs`, dedupes repeat demos — say “production uses live crawl” |
 | 1 | Sign up → add **Metformin** + **Lisinopril** | Personalization input |
-| 2 | **Scan Now** | Nimble + Claude pipeline (15–120s) |
+| 2 | **Scan Now** | With fallback: cached alerts + Realtime; live: Nimble + Claude (15–120s) |
 | 3 | Alert card appears | Realtime + severity badge |
-| 4 | Open alert detail | FDA / PubMed **source URL** |
-| 5 | **AI Chat** — ask about interaction or recent FDA news | SSE stream + Nimble sources panel |
+| 4 | Open alert detail | FDA / PubMed **source URL** (fallback uses real FDA recall copy) |
+| 5 | **AI Chat** — ask about interaction or recent FDA news | SSE stream + Nimble sources panel (needs live APIs) |
 | 6 | (Optional) Caregiver invite | Magic link read-only view |
+| 7 | **Scan history** (`/dashboard/history`) | Past scans: time, sources, alerts found, duration |
 
-Set `DEMO_FALLBACK=true` only if live APIs are unavailable on stage.
+**When to use fallback:** stage Wi‑Fi, cold APIs, or scan timeouts over 2 minutes. **When to use live:** Nimble Challenge judging — run health checks first, then set `DEMO_FALLBACK=false`.
+
+---
+
+## Known limitations
+
+These are intentional scope decisions for the hackathon MVP, not bugs.
+
+1. **Drug name matching** — Free-text medication profile; no medical terminology NLP (e.g. “Tylenol” vs “acetaminophen” usually work via Claude context, but typos and obscure synonyms may be missed).
+2. **FDA coverage** — Primarily FDA Drug Safety Communications (+ RSS fallback), not a full pharmacovigilance or adverse-event reporting database.
+3. **No real-time monitoring** — Scans are manual (**Scan Now**) or cron-based (every 6 hours), not continuous background surveillance.
+4. **Simplified severity** — `critical` / `warning` / `info` are AI-assigned and interpretive, not clinical-grade triage.
+5. **English only** — UI and patient-facing copy are English (US consumer health context); codebase comments and some internal names use Indonesian per team convention.
 
 ---
 

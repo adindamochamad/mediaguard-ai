@@ -21,6 +21,13 @@ export function IkonNav({ jenis, className = 'h-5 w-5' }: PropsIkonNav) {
           <path d="M8.5 8.5l7 7" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
       );
+    case 'history':
+      return (
+        <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" aria-hidden>
+          <circle cx="12" cy="12" r="10" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M12 6v6l4 2" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      );
     case 'chat':
       return (
         <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" aria-hidden>

@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useCallback, useEffect, useState } from 'react';
 import { PanelKosongPeringatan } from '@/components/panel-kosong-peringatan';
+import { TombolFeedbackAlert } from '@/components/tombol-feedback-alert';
 import { buat_klien_supabase_peramban } from '@/lib/supabase/client';
 
 type AlertRingkas = {
@@ -14,6 +15,8 @@ type AlertRingkas = {
   source_url: string | null;
   ai_confidence: number | null;
   read_at: string | null;
+  user_helpful: boolean | null;
+  feedback_at: string | null;
   created_at: string;
 };
 
@@ -222,7 +225,22 @@ export function DaftarAlertRingkas({
               <h2 className="mt-2 text-base font-semibold text-foreground">{alert.title}</h2>
               <p className="mt-2 line-clamp-2 text-sm text-muted">{alert.summary}</p>
 
-              <div className="mt-4 flex flex-wrap gap-2">
+              <div className="mt-4 border-t border-border/80 pt-4">
+                <TombolFeedbackAlert
+                  alert_id={alert.id}
+                  user_helpful={alert.user_helpful}
+                  feedback_at={alert.feedback_at}
+                  on_feedback_tersimpan={(helpful, feedback_at) => {
+                    set_daftar_alert((prev) =>
+                      prev.map((a) =>
+                        a.id === alert.id ? { ...a, user_helpful: helpful, feedback_at } : a,
+                      ),
+                    );
+                  }}
+                />
+              </div>
+
+              <div className="mt-3 flex flex-wrap gap-2">
                 <Link
                   href={`/dashboard/alerts/${alert.id}`}
                   className="btn-secondary !px-3 !py-1.5 text-sm"

@@ -1,4 +1,6 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
+import { muat_indeks_duplikat } from '@/lib/scan/deduplikasi-alert';
+import { normalisasi_url_sumber } from '@/lib/scan/normalisasi-url';
 
 // =============================================================================
 // UNTUK DEMO "WHOA MOMENT" — entry pertama sudah diisi real FDA recall:
@@ -21,12 +23,15 @@ type AlertDemo = {
   source_type: string;
   ai_confidence: number;
   medication_name: string;
-  // Tanggal kapan MediGuard "mendeteksi" alert ini — diisi NOW() saat INSERT
-  // tapi bisa di-override ke tanggal spesifik jika diperlukan untuk demo
   detected_at?: string;
 };
 
-// Entry pertama = "whoa moment" — real FDA Class II Recall, Oktober 2025
+export type HasilSisipDemo = {
+  jumlah_alert_baru: number;
+  jumlah_alert_duplikat: number;
+  durasi_ms: number;
+};
+
 const DEMO_ALERTS: AlertDemo[] = [
   {
     severity: 'warning',
@@ -36,8 +41,7 @@ const DEMO_ALERTS: AlertDemo[] = [
       'Routine quality control testing found the tablets fail dissolution specifications — meaning the pill may not break down at the correct rate for absorption, potentially rendering your cholesterol treatment ineffective.\n\n' +
       'Affected lot numbers include: 25141249, 24144938, 24144868, 24144867, 24144458, 24143994, 24142987, 24143316 (10mg), and additional lots for 20mg, 40mg, 80mg doses. NDC: 67877-511-xx / 67877-512-xx / 67877-513-xx / 67877-514-xx.\n\n' +
       'What you can do: Check the lot number on your Atorvastatin bottle against the recall list. Contact your pharmacy for a replacement if your lot is affected. Keep taking your prescribed dose unless your doctor tells you otherwise — uncontrolled LDL cholesterol poses its own risk.',
-    source_url:
-      'https://www.accessdata.fda.gov/scripts/ires/index.cfm',
+    source_url: 'https://www.accessdata.fda.gov/scripts/ires/index.cfm',
     source_type: 'fda',
     ai_confidence: 0.96,
     medication_name: 'Atorvastatin',
@@ -84,10 +88,16 @@ const DEMO_ALERTS: AlertDemo[] = [
   },
 ];
 
+/**
+ * Sisipkan alert demo dengan deduplikasi URL + catat scan_logs (selaras pipeline live).
+ */
 export async function sisipkan_alert_demo(
   supabase: SupabaseClient,
   id_pengguna: string,
-): Promise<number> {
+): Promise<HasilSisipDemo> {
+  const waktu_mulai = Date.now();
+  const indeks_duplikat = await muat_indeks_duplikat(supabase, id_pengguna);
+
   const { data: daftar_obat } = await supabase
     .from('medications')
     .select('id, brand_name, generic_name')
@@ -99,9 +109,16 @@ export async function sisipkan_alert_demo(
     if (obat.generic_name) peta_obat.set(obat.generic_name.toLowerCase(), obat.id);
   }
 
-  let jumlah_sisip = 0;
+  let jumlah_alert_baru = 0;
+  let jumlah_alert_duplikat = 0;
 
   for (const alert of DEMO_ALERTS) {
+    const url_normal = normalisasi_url_sumber(alert.source_url);
+    if (indeks_duplikat.url_sudah_ada.has(url_normal)) {
+      jumlah_alert_duplikat += 1;
+      continue;
+    }
+
     const id_obat = peta_obat.get(alert.medication_name.toLowerCase()) ?? null;
 
     const baris: Record<string, unknown> = {
@@ -122,8 +139,33 @@ export async function sisipkan_alert_demo(
 
     const { error } = await supabase.from('alerts').insert(baris);
 
-    if (!error) jumlah_sisip++;
+    if (error) {
+      console.error('[demo-fallback] gagal insert alert:', error.message);
+      continue;
+    }
+
+    indeks_duplikat.url_sudah_ada.add(url_normal);
+    jumlah_alert_baru += 1;
   }
 
-  return jumlah_sisip;
+  const durasi_ms = Date.now() - waktu_mulai;
+  const jumlah_sumber = 3;
+
+  const { error: galat_log } = await supabase.from('scan_logs').insert({
+    user_id: id_pengguna,
+    scan_type: 'manual',
+    sources_crawled: jumlah_sumber,
+    alerts_generated: jumlah_alert_baru,
+    duration_ms: durasi_ms,
+  });
+
+  if (galat_log) {
+    console.error('[demo-fallback] gagal menulis scan_logs:', galat_log.message);
+  }
+
+  console.log(
+    `[SCAN] status=demo_ok user=${id_pengguna} type=manual meds=${daftar_obat?.length ?? 0} sources=${jumlah_sumber} alerts=${DEMO_ALERTS.length} new=${jumlah_alert_baru} dup=${jumlah_alert_duplikat} duration_ms=${durasi_ms}`,
+  );
+
+  return { jumlah_alert_baru, jumlah_alert_duplikat, durasi_ms };
 }

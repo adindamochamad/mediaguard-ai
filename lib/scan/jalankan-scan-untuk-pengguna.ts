@@ -24,6 +24,18 @@ import {
 const BATAS_OBAT_UNTUK_CRAWL = 9;
 const TIMEOUT_NIMBLE_MS = 20_000;
 
+/** Log terstruktur untuk PM2/Vercel logs — grep `[SCAN]` di production. */
+function log_scan(
+  status: string,
+  fields: Record<string, string | number | boolean | undefined>,
+) {
+  const bagian = Object.entries(fields)
+    .filter(([, nilai]) => nilai !== undefined)
+    .map(([kunci, nilai]) => `${kunci}=${nilai}`)
+    .join(' ');
+  console.log(`[SCAN] status=${status} ${bagian}`);
+}
+
 function dengan_timeout<T>(promise: Promise<T>, ms: number): Promise<T> {
   return Promise.race([
     promise,
@@ -162,6 +174,11 @@ export async function jalankan_scan_untuk_pengguna(opsi: {
   const waktu_mulai = Date.now();
   const jenis_scan = opsi.jenis_scan ?? 'manual';
 
+  log_scan('start', {
+    user: opsi.id_pengguna,
+    type: jenis_scan,
+  });
+
   const { data: daftar_obat, error: galat_obat } = await opsi.supabase
     .from('medications')
     .select('id, user_id, brand_name, generic_name, dosage, condition_note, created_at')
@@ -169,6 +186,13 @@ export async function jalankan_scan_untuk_pengguna(opsi: {
     .order('created_at', { ascending: false });
 
   if (galat_obat) {
+    log_scan('failed', {
+      user: opsi.id_pengguna,
+      type: jenis_scan,
+      reason: 'load_medications',
+      error: galat_obat.message,
+      duration_ms: Date.now() - waktu_mulai,
+    });
     throw new Error(`Gagal memuat obat: ${galat_obat.message}`);
   }
 
@@ -177,6 +201,13 @@ export async function jalankan_scan_untuk_pengguna(opsi: {
   if (obat_pengguna.length === 0) {
     const durasi_ms = Date.now() - waktu_mulai;
     await catat_log_scan(opsi.supabase, opsi.id_pengguna, jenis_scan, 0, 0, durasi_ms);
+    log_scan('skipped', {
+      user: opsi.id_pengguna,
+      type: jenis_scan,
+      meds: 0,
+      reason: 'no_medications',
+      duration_ms: durasi_ms,
+    });
     return {
       id_pengguna: opsi.id_pengguna,
       jenis_scan,
@@ -198,6 +229,15 @@ export async function jalankan_scan_untuk_pengguna(opsi: {
   const { konten, jumlah_sumber } = await kumpulkan_konten_nimble(obat_pengguna);
 
   if (!konten.trim()) {
+    const durasi_gagal = Date.now() - waktu_mulai;
+    log_scan('failed', {
+      user: opsi.id_pengguna,
+      type: jenis_scan,
+      meds: obat_pengguna.length,
+      sources: jumlah_sumber,
+      reason: 'no_crawl_content',
+      duration_ms: durasi_gagal,
+    });
     throw new Error(
       'Tidak ada konten crawl — periksa kredensial Nimble atau koneksi jaringan.',
     );
@@ -258,6 +298,18 @@ export async function jalankan_scan_untuk_pengguna(opsi: {
     jumlah_alert_baru,
     durasi_ms,
   );
+
+  log_scan('ok', {
+    user: opsi.id_pengguna,
+    type: jenis_scan,
+    meds: obat_pengguna.length,
+    sources: jumlah_sumber,
+    alerts: alert_relevan.length,
+    new: jumlah_alert_baru,
+    dup: jumlah_alert_duplikat,
+    email_critical: jumlah_email_kritis_terkirim,
+    duration_ms: durasi_ms,
+  });
 
   return {
     id_pengguna: opsi.id_pengguna,
