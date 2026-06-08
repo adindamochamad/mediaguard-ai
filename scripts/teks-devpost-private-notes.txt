@@ -1,0 +1,43 @@
+=== COPY-PASTE INTO DEVPOST "Private notes to judges" ===
+
+MediGuard AI — judge access (DeveloperWeek NYC 2026)
+
+Live app: https://mediguard.adindamochamad.com
+GitHub: https://github.com/adindamochamad/mediaguard-ai
+
+--- Demo login (pre-seeded account) ---
+
+Email:    demo@mediguard.adindamochamad.com
+Password: MediGuardDemo2026!
+
+After login you should see:
+• 9 medications (Metformin, Warfarin, Lisinopril, Atorvastatin, etc.)
+• 9 pre-loaded personalized alerts (2 critical, 4 warning, 3 info)
+• Scan history on the dashboard
+
+--- Hybrid demo mode (production server) ---
+
+DEMO_FALLBACK=true is enabled for reliable stage demos:
+• Scan Now → ~1 second, cached FDA-style alerts + Supabase Realtime (no 60–120s wait)
+• AI Chat → LIVE Nimble (FDA Extract, medical news Search, PubMed) + Claude agentic tool loop
+
+To verify Nimble without logging in:
+  curl https://mediguard.adindamochamad.com/api/health/nimble
+
+Suggested live chat question (shows Nimble tool status in UI):
+  "Any FDA warning about Metformin this week?"
+
+--- Quick tour (3 min) ---
+
+1. Dashboard → open a critical alert (Warfarin or Sertraline) → verify source URL
+2. Scan Now → watch new alert appear via Realtime (~1s)
+3. AI Chat → ask Metformin FDA question → point at "Nimble sources fetched" panel
+4. Optional: Settings → caregiver magic link (read-only, no account)
+
+--- Reset demo data (if needed) ---
+
+Run scripts/seed-demo.sql in Supabase SQL Editor (UUID already set for demo user).
+
+Questions: see README "How it works (deep dive for judges)" or HACKATHON-SUBMISSION.md
+
+=== END ===

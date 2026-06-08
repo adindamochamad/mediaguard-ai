@@ -12,6 +12,7 @@ import {
   GalatBatasWaktuScan,
   dengan_batas_waktu_scan,
 } from '@/lib/scan/dengan-batas-waktu-scan';
+import { apakah_mode_demo_scan } from '@/lib/konfigurasi-mode-demo';
 
 /**
  * POST — pemindaian manual (Scan Now).
@@ -43,20 +44,28 @@ export async function POST() {
     );
   }
 
-  if (process.env.DEMO_FALLBACK === 'true') {
+  if (apakah_mode_demo_scan()) {
     try {
       const hasil_demo = await sisipkan_alert_demo(supabase, pengguna.id);
+
       return NextResponse.json({
         status: 'selesai',
+        mode_demo_scan: true,
         scan: {
           id_pengguna: pengguna.id,
           jenis_scan: 'manual',
-          jumlah_sumber: 3,
+          jumlah_sumber: hasil_demo.jumlah_sumber,
           jumlah_alert_relevan: hasil_demo.jumlah_alert_baru + hasil_demo.jumlah_alert_duplikat,
           jumlah_alert_baru: hasil_demo.jumlah_alert_baru,
           jumlah_alert_duplikat: hasil_demo.jumlah_alert_duplikat,
           jumlah_email_kritis_terkirim: 0,
           durasi_ms: hasil_demo.durasi_ms,
+          pesan:
+            hasil_demo.jumlah_alert_baru > 0
+              ? 'Demo scan complete — live Nimble runs in AI Chat.'
+              : hasil_demo.jumlah_alert_duplikat > 0
+                ? 'Demo scan — alerts already on file (deduplicated). Try AI Chat for live Nimble.'
+                : undefined,
         },
       });
     } catch (galat) {
@@ -76,6 +85,7 @@ export async function POST() {
 
     return NextResponse.json({
       status: 'selesai',
+      mode_demo_scan: false,
       scan: hasil,
     });
   } catch (galat) {

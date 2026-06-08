@@ -1,4 +1,5 @@
 import { PanelChatAi } from '@/components/panel-chat-ai';
+import { BannerModeDemoHybrid } from '@/components/banner-mode-demo-hybrid';
 
 export default function HalamanChat() {
   return (
@@ -8,6 +9,10 @@ export default function HalamanChat() {
         Chat with AI that retrieves live Food and Drug Administration (FDA) and medical sources via Nimble, then answers with
         citations.
       </p>
+
+      <div className="mt-6">
+        <BannerModeDemoHybrid konteks="chat" />
+      </div>
 
       <div className="mt-8">
         <PanelChatAi />

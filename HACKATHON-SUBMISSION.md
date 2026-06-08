@@ -62,43 +62,70 @@ Next.js, TypeScript, Supabase, Nimble API, Anthropic Claude, Resend, Tailwind CS
 
 ## Demo credentials (private note to judges)
 
-Create or use the seeded demo account:
+**Copy-paste ke Devpost:** isi penuh ada di `scripts/teks-devpost-private-notes.txt`.
 
-1. Sign up at https://mediguard.adindamochamad.com/signup **or** use pre-seeded account  
-2. Run `scripts/seed-demo.sql` in Supabase SQL Editor (replace UUID if needed)  
-3. Suggested demo email: *(fill in your demo account email + password before submitting)*
+| Field | Value |
+|-------|-------|
+| **Email** | `demo@mediguard.adindamochamad.com` |
+| **Password** | `MediGuardDemo2026!` |
+| **Pre-seeded** | 9 medications + 9 alerts (run `scripts/seed-demo.sql` if dashboard is empty) |
 
-**Production demo mode:** set `DEMO_FALLBACK=true` in server `.env.local` before live presentation so Scan Now inserts realistic alerts instantly (Nimble + Claude still used for AI Chat and health checks).
+**Login page hint:** set `NEXT_PUBLIC_DEMO_JUDGE_HINT=true`, `NEXT_PUBLIC_DEMO_JUDGE_EMAIL`, and `NEXT_PUBLIC_DEMO_JUDGE_PASSWORD` on production — judges see email + password on `/login` and the form is pre-filled.
 
 ---
 
-## 3-minute live demo script
+## Hybrid demo strategy (Scan cached · Chat live Nimble)
+
+Full presenter script: [`docs/demo-hybrid-juri.md`](docs/demo-hybrid-juri.md).
+
+**Production env before stage:**
+
+```
+DEMO_FALLBACK=true
+NEXT_PUBLIC_DEMO_JUDGE_HINT=true
+NEXT_PUBLIC_DEMO_JUDGE_EMAIL=demo@mediguard.adindamochamad.com
+```
+
+| Moment | Mode | What judges see |
+|--------|------|-----------------|
+| **Scan Now** | `DEMO_FALLBACK` | ~1s, Realtime push, scan history with realistic source counts |
+| **AI Chat** | Live Nimble + Claude tools | Tool status lines + "Nimble sources fetched" panel |
+| **Alert detail** | Pre-seeded or demo insert | Real FDA / PubMed URLs |
+
+**Say on stage when clicking Scan Now:**  
+*"Production scans crawl live FDA, PubMed, and medical news in about sixty seconds. For this demo we use cached alerts so Wi‑Fi doesn't block us — live Nimble is in AI Chat."*
+
+---
+
+## 3-minute live demo script (hybrid)
 
 | Time | Action | Say |
 |------|--------|-----|
-| 0:00 | Open dashboard (logged in, 9 meds seeded) | "This patient takes 9 medications. MediGuard already found 9 personalized alerts — not generic FDA spam." |
-| 0:20 | Click **critical** Warfarin or Sertraline alert | "Every alert has severity, plain language, and a direct FDA or PubMed link you can verify." |
-| 0:45 | Click **Scan now** | "One click triggers Nimble to crawl FDA, PubMed, and medical news — Claude filters to this patient's list." |
-| 1:30 | Point at new alert appearing (Realtime) | "Supabase Realtime pushes alerts instantly — no refresh." |
-| 1:50 | Open **AI Chat**, ask: "Any FDA warning about Metformin this week?" | "Chat pre-crawls Nimble sources and streams an answer with citations." |
-| 2:30 | **Settings** → invite caregiver | "Family members get a read-only magic link — no account needed." |
-| 2:50 | Close | "MediGuard — the one alert that matters to you." |
+| 0:00 | Login as demo account → Dashboard | "Nine medications, nine personalized alerts — not generic FDA spam." |
+| 0:10 | Point at amber hybrid banner | "Scan is cached for speed; chat uses live Nimble." |
+| 0:25 | Open **critical** Warfarin or Sertraline alert | "Plain language, severity, verifiable source URL." |
+| 0:45 | **Scan Now** | "One click — Realtime push in about a second. Production runs full Nimble crawl." |
+| 1:10 | Scan history row | "Sources crawled, new alerts, duration — audit trail." |
+| 1:25 | **AI Chat** → click **Live Nimble demo** suggested question | "Claude calls Nimble FDA Extract, Search, and PubMed before answering." |
+| 1:50 | Tool status + sources panel | "These URLs were just fetched from the live web." |
+| 2:20 | Settings → caregiver (optional) | "Read-only magic link for family — no account." |
+| 2:45 | Close | "MediGuard — the one alert that matters to you." |
 
-**Backup:** play `video/out/mediaguard-demo.mp4` if WiFi fails.
+**Backup:** YouTube video (Devpost) if WiFi fails.
 
 ---
 
 ## Pre-submission checklist
 
 ```
-[ ] Upload video to YouTube (unlisted) → paste URL in Devpost
-[ ] Paste live URL: https://mediguard.adindamochamad.com
-[ ] Paste GitHub repo link
+[x] Upload video to YouTube (unlisted) → paste URL in Devpost
+[x] Paste live URL: https://mediguard.adindamochamad.com
+[x] Paste GitHub repo link
 [ ] Tag Nimble + Overall challenges
-[ ] Add demo credentials in Devpost private notes
-[ ] Run seed-demo.sql on production Supabase
-[ ] Set DEMO_FALLBACK=true on production before stage demo (optional)
-[ ] Rehearse 3-min script × 3
+[ ] Add demo credentials in Devpost private notes (copy scripts/teks-devpost-private-notes.txt — requires your Devpost login)
+[ ] Run seed-demo.sql on production Supabase — or: npm run setup:demo-juri
+[ ] Set DEMO_FALLBACK=true + NEXT_PUBLIC_DEMO_JUDGE_HINT=true on production before stage
+[ ] Rehearse hybrid 3-min script × 3 (docs/demo-hybrid-juri.md)
 [ ] npm run verify && npm run test — both exit 0
 [ ] Health checks all green:
       curl https://mediguard.adindamochamad.com/api/health/db

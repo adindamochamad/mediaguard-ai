@@ -1,4 +1,5 @@
 import { BungkusBatasGalat } from '@/components/bungkus-batas-galat';
+import { BannerModeDemoHybrid } from '@/components/banner-mode-demo-hybrid';
 import { DaftarAlertRingkas } from '@/components/daftar-alert-ringkas';
 import { GrafikSeverityAlert } from '@/components/grafik-severity-alert';
 import { KontrolScanDashboard } from '@/components/kontrol-scan-dashboard';
@@ -71,6 +72,8 @@ export default async function HalamanDashboard() {
 
   return (
     <div className="mx-auto max-w-4xl space-y-6">
+      <BannerModeDemoHybrid konteks="dashboard" />
+
       {pesan_galat_db ? (
         <PenampilGangguanLayanan
           pesan={pesan_galat_db}

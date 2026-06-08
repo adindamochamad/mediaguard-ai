@@ -74,6 +74,7 @@ export function KontrolScanDashboard({
       });
       const body = (await respons.json()) as {
         kesalahan?: string;
+        mode_demo_scan?: boolean;
         scan?: {
           jumlah_alert_baru: number;
           jumlah_alert_duplikat: number;
@@ -88,15 +89,23 @@ export function KontrolScanDashboard({
       }
 
       const scan = body.scan;
+      const mode_demo = body.mode_demo_scan === true;
+
       if (scan?.pesan) {
-        toast.info(scan.pesan, { id: id_toast });
+        toast.info(scan.pesan, { id: id_toast, duration: mode_demo ? 6000 : 4000 });
       } else if (scan) {
         const jumlah = scan.jumlah_alert_baru;
         const detik  = Math.round(scan.durasi_ms / 1000);
         if (jumlah > 0) {
-          toast.success(
-            `${jumlah} new alert${jumlah === 1 ? '' : 's'} found — check your feed below.`,
-            { id: id_toast, duration: 5000 },
+          const inti = `${jumlah} new alert${jumlah === 1 ? '' : 's'} found — check your feed below.`;
+          toast.success(mode_demo ? `${inti} Open AI Chat for live Nimble.` : inti, {
+            id: id_toast,
+            duration: mode_demo ? 6000 : 5000,
+          });
+        } else if (scan.jumlah_alert_duplikat > 0 && mode_demo) {
+          toast.info(
+            'Demo scan — alerts already on file. Open AI Chat to see live Nimble crawl.',
+            { id: id_toast, duration: 6000 },
           );
         } else {
           toast.success(`All clear — no new alerts (${detik}s).`, { id: id_toast });

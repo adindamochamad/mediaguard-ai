@@ -5,14 +5,20 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { buat_klien_supabase_peramban } from '@/lib/supabase/client';
 
-export function FormMasuk() {
+export function FormMasuk({
+  email_demo_awal,
+  sandi_demo_awal,
+}: {
+  email_demo_awal?: string;
+  sandi_demo_awal?: string;
+}) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirect_to = searchParams.get('redirectTo') ?? '/dashboard';
   const error_awal = searchParams.get('error');
 
-  const [email, set_email] = useState('');
-  const [kata_sandi, set_kata_sandi] = useState('');
+  const [email, set_email] = useState(email_demo_awal ?? '');
+  const [kata_sandi, set_kata_sandi] = useState(sandi_demo_awal ?? '');
   const [sedang_memuat, set_sedang_memuat] = useState(false);
   const [pesan_galat, set_pesan_galat] = useState(
     error_awal === 'auth_callback_failed'

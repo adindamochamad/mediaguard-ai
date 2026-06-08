@@ -30,6 +30,7 @@ export type HasilSisipDemo = {
   jumlah_alert_baru: number;
   jumlah_alert_duplikat: number;
   durasi_ms: number;
+  jumlah_sumber: number;
 };
 
 const DEMO_ALERTS: AlertDemo[] = [
@@ -54,8 +55,7 @@ const DEMO_ALERTS: AlertDemo[] = [
       'Co-administration significantly increases risk of serious bleeding events — including gastrointestinal and intracranial bleeding.\n\n' +
       'What you can do: Do not take ibuprofen (Advil, Motrin) or naproxen (Aleve) while on Warfarin without consulting your healthcare provider first. ' +
       'Contact your doctor or pharmacist before your next dose if you have taken an NSAID recently.',
-    source_url:
-      'https://www.fda.gov/drugs/drug-safety-and-availability/fda-drug-safety-communication-warfarin-nsaid-interactions',
+    source_url: 'https://dailymed.nlm.nih.gov/dailymed/search.cfm?query=warfarin',
     source_type: 'fda',
     ai_confidence: 0.94,
     medication_name: 'Warfarin',
@@ -68,7 +68,7 @@ const DEMO_ALERTS: AlertDemo[] = [
       'Deficiency can cause peripheral neuropathy and cognitive changes that are often misattributed to diabetes progression itself.\n\n' +
       'What you can do: Ask your doctor about annual B12 blood level screening. ' +
       'If levels are low, supplementation is straightforward and effective.',
-    source_url: 'https://pubmed.ncbi.nlm.nih.gov/search/?term=metformin+vitamin+b12+deficiency+meta-analysis',
+    source_url: 'https://pubmed.ncbi.nlm.nih.gov/38100217/',
     source_type: 'pubmed',
     ai_confidence: 0.88,
     medication_name: 'Metformin',
@@ -149,7 +149,9 @@ export async function sisipkan_alert_demo(
   }
 
   const durasi_ms = Date.now() - waktu_mulai;
-  const jumlah_sumber = 3;
+  // Selaras pipeline live: 1 FDA + 2 sumber per obat (berita + PubMed)
+  const jumlah_obat = daftar_obat?.length ?? 0;
+  const jumlah_sumber = jumlah_obat > 0 ? 1 + jumlah_obat * 2 : 3;
 
   const { error: galat_log } = await supabase.from('scan_logs').insert({
     user_id: id_pengguna,
@@ -167,5 +169,5 @@ export async function sisipkan_alert_demo(
     `[SCAN] status=demo_ok user=${id_pengguna} type=manual meds=${daftar_obat?.length ?? 0} sources=${jumlah_sumber} alerts=${DEMO_ALERTS.length} new=${jumlah_alert_baru} dup=${jumlah_alert_duplikat} duration_ms=${durasi_ms}`,
   );
 
-  return { jumlah_alert_baru, jumlah_alert_duplikat, durasi_ms };
+  return { jumlah_alert_baru, jumlah_alert_duplikat, durasi_ms, jumlah_sumber };
 }

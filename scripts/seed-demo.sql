@@ -2,15 +2,16 @@
 -- Jalankan di Supabase SQL Editor sebelum presentasi.
 --
 -- LANGKAH PERSIAPAN:
---   1. Buat akun di /daftar dengan email demo (mis. demo@mediguard.ai)
+--   1. Buat akun di /signup dengan email demo@mediguard.adindamochamad.com
+--      Password: MediGuardDemo2026! (lihat scripts/teks-devpost-private-notes.txt)
 --   2. Buka Supabase Dashboard → Authentication → Users
---   3. Salin UUID akun demo tersebut
---   4. Ganti nilai DEMO_USER_ID di bawah dengan UUID tersebut
+--   3. Salin UUID akun demo tersebut (atau pakai UUID di bawah jika sudah cocok)
+--   4. Ganti demo_user_id jika UUID berbeda
 --   5. Jalankan script ini
 
 DO $$
 DECLARE
-  demo_user_id UUID := '0d22da19-bbba-4d08-b887-edcb5c2e171a';
+  demo_user_id UUID := 'b8c5b6da-5346-4c2c-9c09-db22cc540579';
   met_id UUID;
   lis_id UUID;
   war_id UUID;
@@ -54,14 +55,14 @@ BEGIN
       demo_user_id, war_id, 'critical',
       'FDA Safety Alert: Warfarin — Increased Bleeding Risk with NSAIDs',
       'The FDA has updated safety labeling for Warfarin to strengthen warnings about concurrent use with NSAIDs (ibuprofen, naproxen). Co-administration can significantly increase the risk of serious bleeding events, including gastrointestinal bleeding.' || chr(10) || chr(10) || 'What you can do: Contact your healthcare provider before taking any over-the-counter pain relievers. Do not stop Warfarin without medical guidance.',
-      'https://www.fda.gov/drugs/drug-safety-and-availability/fda-drug-safety-communication-warfarin-nsaid-interactions',
+      'https://dailymed.nlm.nih.gov/dailymed/search.cfm?query=warfarin',
       'fda', 0.94
     ),
     (
       demo_user_id, met_id, 'warning',
       'PubMed Study: Metformin — Vitamin B12 Deficiency Risk with Long-term Use',
       'A meta-analysis (2024) in Diabetes Care confirms that long-term Metformin use is associated with a 20-30% increased risk of Vitamin B12 deficiency. Deficiency can cause peripheral neuropathy and cognitive changes that may be misattributed to diabetes progression.' || chr(10) || chr(10) || 'What you can do: Ask your doctor about annual B12 screening. Supplementation may be appropriate if levels are low.',
-      'https://pubmed.ncbi.nlm.nih.gov/search/?term=metformin+vitamin+b12+deficiency',
+      'https://pubmed.ncbi.nlm.nih.gov/38100217/',
       'pubmed', 0.88
     ),
     (
@@ -75,28 +76,28 @@ BEGIN
       demo_user_id, ato_id, 'warning',
       'FDA Safety Communication: Atorvastatin — Muscle Pain and Rhabdomyolysis Risk',
       'The FDA has issued updated guidance on statin-associated myopathy. Patients taking Atorvastatin at higher doses (40–80mg) have an elevated risk of muscle injury, ranging from mild myalgia to rare but serious rhabdomyolysis, especially when combined with certain antibiotics or antifungals.' || chr(10) || chr(10) || 'What you can do: Report unexplained muscle pain, weakness, or dark urine to your doctor immediately. Do not adjust your dose without medical guidance.',
-      'https://www.fda.gov/drugs/drug-safety-and-availability/fda-drug-safety-communication-important-safety-label-changes-cholesterol-lowering-statin-drugs',
+      'https://dailymed.nlm.nih.gov/dailymed/search.cfm?query=atorvastatin',
       'fda', 0.91
     ),
     (
       demo_user_id, ome_id, 'warning',
       'PubMed Study: Omeprazole — Long-term Use Linked to Kidney Disease Risk',
       'A large cohort study published in JAMA Internal Medicine found that long-term PPI use (>2 years), including Omeprazole, is associated with a 20-50% increased risk of chronic kidney disease compared to H2 blocker use. The mechanism may involve interstitial nephritis.' || chr(10) || chr(10) || 'What you can do: Discuss with your doctor whether you still need long-term PPI therapy or if a lower dose or alternative is appropriate. Do not stop abruptly — rebound acid hypersecretion may occur.',
-      'https://pubmed.ncbi.nlm.nih.gov/search/?term=omeprazole+chronic+kidney+disease+long-term',
+      'https://pubmed.ncbi.nlm.nih.gov/26752337/',
       'pubmed', 0.86
     ),
     (
       demo_user_id, ser_id, 'critical',
       'FDA Black Box Warning: Sertraline — Increased Suicidal Thoughts in Young Adults',
       'The FDA requires a black box warning on all SSRIs including Sertraline: antidepressants may increase the risk of suicidal thinking and behavior in children, adolescents, and young adults (18–24) during the first 1–2 months of treatment.' || chr(10) || chr(10) || 'What you can do: Monitor closely for worsening depression, agitation, or unusual behavior changes — especially in the first weeks of starting or changing doses. Contact your healthcare provider or call 988 (Suicide & Crisis Lifeline) if needed.',
-      'https://www.fda.gov/drugs/drug-safety-and-availability/suicidality-children-and-adolescents-being-treated-antidepressant-medications',
+      'https://dailymed.nlm.nih.gov/dailymed/search.cfm?query=sertraline',
       'fda', 0.95
     ),
     (
       demo_user_id, par_id, 'warning',
       'FDA Safety Reminder: Paracetamol — Overdose Risk from Multiple Sources',
       'The FDA warns that accidental overdose of acetaminophen (Paracetamol) is the leading cause of acute liver failure in the US. Many combination OTC products (cold medicines, sleep aids) also contain acetaminophen — patients may unknowingly exceed the 4g/day maximum safe dose.' || chr(10) || chr(10) || 'What you can do: Always check all medication labels for acetaminophen content. Never exceed 4,000mg (4g) per day across all products. Avoid alcohol while taking Paracetamol.',
-      'https://www.fda.gov/drugs/drug-safety-and-availability/acetaminophen-information',
+      'https://dailymed.nlm.nih.gov/dailymed/search.cfm?query=acetaminophen',
       'fda', 0.90
     ),
     (
@@ -110,7 +111,7 @@ BEGIN
       demo_user_id, lev_id, 'info',
       'FDA Guidance: Levothyroxine — Drug Interactions Affecting Absorption',
       'The FDA reminds patients that multiple common medications significantly reduce Levothyroxine absorption when taken together, including calcium supplements, iron, antacids (aluminum/magnesium), and PPIs like omeprazole. This can lead to inadequately treated hypothyroidism.' || chr(10) || chr(10) || 'What you can do: Take Levothyroxine on an empty stomach, 30–60 minutes before breakfast. Space it at least 4 hours from calcium, iron, or antacid supplements.',
-      'https://www.fda.gov/drugs/drug-safety-and-availability/fda-drug-safety-communication-levothyroxine-interactions',
+      'https://dailymed.nlm.nih.gov/dailymed/search.cfm?query=levothyroxine',
       'fda', 0.83
     );
 

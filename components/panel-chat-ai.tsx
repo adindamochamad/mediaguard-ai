@@ -8,11 +8,28 @@ type PesanChat = {
   isi: string;
 };
 
+type StatusTool = {
+  id: string;
+  pesan: string;
+};
+
 type SumberChat = {
   judul: string;
   url: string;
   asal: string;
 };
+
+/** Pertanyaan disarankan — urutan pertama dioptimalkan untuk demo live Nimble. */
+const PERTANYAAN_DEMO_NIMBLE =
+  'Any FDA warning about Metformin this week?';
+
+const DAFTAR_PERTANYAAN_SARAN = [
+  PERTANYAAN_DEMO_NIMBLE,
+  'Is there anything new about my medications I should worry about?',
+  'What are the interactions between Warfarin and common over-the-counter drugs?',
+  'Are any of my medications currently under Food and Drug Administration (FDA) recall or safety review?',
+  'What should I watch out for with Metformin long-term?',
+];
 
 function buat_id_chat(): string {
   return `${Date.now()}-${Math.random().toString(16).slice(2)}`;
@@ -37,6 +54,7 @@ export function PanelChatAi() {
   const [pesan_galat, set_pesan_galat] = useState<string | null>(null);
   const [daftar_pesan, set_daftar_pesan] = useState<PesanChat[]>([]);
   const [daftar_sumber, set_daftar_sumber] = useState<SumberChat[]>([]);
+  const [log_status, set_log_status] = useState<StatusTool[]>([]);
 
   const bisa_kirim = useMemo(
     () => pertanyaan.trim().length > 0 && !sedang_mengirim,
@@ -54,6 +72,7 @@ export function PanelChatAi() {
     set_pesan_galat(null);
     set_pertanyaan('');
     set_daftar_sumber([]);
+    set_log_status([]);
     set_sedang_mengirim(true);
     set_daftar_pesan((sebelumnya) => [
       ...sebelumnya,
@@ -96,9 +115,15 @@ export function PanelChatAi() {
             tipe?: string;
             token?: string;
             sumber?: SumberChat[];
+            pesan?: string;
           };
 
-          if (payload.tipe === 'meta' && Array.isArray(payload.sumber)) {
+          if (payload.tipe === 'status' && typeof payload.pesan === 'string') {
+            set_log_status((sebelumnya) => [
+              ...sebelumnya,
+              { id: buat_id_chat(), pesan: payload.pesan! },
+            ]);
+          } else if (payload.tipe === 'meta' && Array.isArray(payload.sumber)) {
             set_daftar_sumber(payload.sumber);
           } else if (payload.tipe === 'token' && typeof payload.token === 'string') {
             set_daftar_pesan((sebelumnya) =>
@@ -131,7 +156,7 @@ export function PanelChatAi() {
           value={pertanyaan}
           onChange={(event) => set_pertanyaan(event.target.value)}
           rows={3}
-          placeholder="Example: Any new Food and Drug Administration (FDA) warning about Metformin this week?"
+          placeholder="Example: Any FDA warning about Metformin this week?"
           className="w-full rounded-xl border border-border bg-white px-3 py-2 text-sm text-foreground outline-none ring-accent transition focus:ring-2"
         />
         <div className="flex flex-wrap items-center gap-3">
@@ -148,6 +173,17 @@ export function PanelChatAi() {
         </div>
       </form>
 
+      {log_status.length > 0 ? (
+        <div className="mt-4 space-y-1">
+          {log_status.map((item) => (
+            <p key={item.id} className="flex items-center gap-2 text-xs text-muted">
+              <span className="inline-block h-1.5 w-1.5 flex-shrink-0 rounded-full bg-accent" />
+              {item.pesan}
+            </p>
+          ))}
+        </div>
+      ) : null}
+
       {pesan_galat ? (
         <p className="mt-4 rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
           {pesan_galat}
@@ -160,19 +196,27 @@ export function PanelChatAi() {
             Suggested questions
           </p>
           <div className="flex flex-col gap-2">
-            {[
-              'Is there anything new about my medications I should worry about?',
-              'What are the interactions between Warfarin and common over-the-counter drugs?',
-              'Are any of my medications currently under Food and Drug Administration (FDA) recall or safety review?',
-              'What should I watch out for with Metformin long-term?',
-            ].map((prompt) => (
+            {DAFTAR_PERTANYAAN_SARAN.map((prompt) => (
               <button
                 key={prompt}
                 type="button"
                 onClick={() => set_pertanyaan(prompt)}
-                className="rounded-xl border border-border bg-slate-50 px-4 py-2.5 text-left text-sm text-muted transition-colors hover:border-accent/40 hover:bg-accent-soft/30 hover:text-foreground"
+                className={`rounded-xl border px-4 py-2.5 text-left text-sm transition-colors ${
+                  prompt === PERTANYAAN_DEMO_NIMBLE
+                    ? 'border-accent/50 bg-accent-soft/40 font-medium text-foreground hover:border-accent'
+                    : 'border-border bg-slate-50 text-muted hover:border-accent/40 hover:bg-accent-soft/30 hover:text-foreground'
+                }`}
               >
-                {prompt}
+                {prompt === PERTANYAAN_DEMO_NIMBLE ? (
+                  <>
+                    <span className="mr-1.5 text-[10px] font-bold uppercase tracking-wide text-accent">
+                      Live Nimble demo
+                    </span>
+                    {prompt}
+                  </>
+                ) : (
+                  prompt
+                )}
               </button>
             ))}
           </div>
